@@ -130,6 +130,9 @@ table.dataTable thead .sorting_desc_disabled {
                                                                         {{form.date|as_crispy_field}}
                                                                     </th>
                                                                     <th class="col-lg-2 col-xl-2 col-md-2">{{form.wool_type|as_crispy_field}}</th>
+                                                                    <th class="col-lg-2 col-xl-2 col-md-2">{{form.wool_company|as_crispy_field}}</th>
+                                                                    <th class="col-lg-2 col-xl-2 col-md-2">{{form.wool_number|as_crispy_field}}</th>
+                                                                    <th class="col-lg-2 col-xl-2 col-md-2">{{form.wool_color|as_crispy_field}}</th>
                                                                     <th class="col-lg-2 col-xl-2 col-md-2">{{form.wool_weight|as_crispy_field}} </th>
                                                                     <th class="col-lg-2 col-xl-2 col-md-2">{{form.wool_price|as_crispy_field}} </th>
                                                                     <th class="col-lg-2 col-xl-2 col-md-2">{{form.total_account|as_crispy_field}} </th>
@@ -183,7 +186,10 @@ table.dataTable thead .sorting_desc_disabled {
                                                                 <thead class="thead-light">
                                                                     <tr>
                                                                         <th>التاريخ</th>
-                                                                        <th>نوع الخيط</th>
+                                                                        <th>نوع الخامة</th>
+                                                                        <th>الشركة</th>
+                                                                        <th>رقم الخامة</th>
+                                                                        <th>لون الخامة</th>
                                                                         <th>الوزن بالكيلو</th>
                                                                         <th>سعر الكيلو</th>
                                                                         <th>اجمالي الحساب</th>
@@ -206,6 +212,15 @@ table.dataTable thead .sorting_desc_disabled {
                                                                         </td>
                                                                         <td>
                                                                             {{x.get_wool_type_display}}
+                                                                        </td>
+                                                                        <td>
+                                                                            {{x.wool_company}}
+                                                                        </td>
+                                                                        <td>
+                                                                            {{x.wool_number}}
+                                                                        </td>
+                                                                        <td>
+                                                                           <span style="background-color: {{x.wool_color}}; padding:5px; ">#######</span>
                                                                         </td>
                                                                         <td>
                                                                             {{x.wool_weight|floatformat:3}}
