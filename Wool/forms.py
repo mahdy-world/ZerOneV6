@@ -24,12 +24,10 @@ class WoolSupplierDeleteForm(forms.ModelForm):
 class WoolSupplierQuantityForm(forms.ModelForm):
     class Meta:
         model = WoolSupplierQuantity
-        fields = ['date', 'wool_type', 'wool_company', 'wool_number', 'wool_color', 'wool_weight', 'wool_price', 'total_account']
+        fields = ['date', 'wool', 'wool_color', 'wool_weight', 'wool_price', 'total_account']
         widgets = {
             'date': forms.DateInput(attrs={'class': 'form-control', 'id': 'date', 'type': 'date'}),
-            'wool_type': forms.Select(attrs={'class': 'form-control', 'id': 'wool_type'}),
-            'wool_company': forms.TextInput(attrs={'class': 'form-control', 'id': 'wool_company'}),
-            'wool_number': forms.NumberInput(attrs={'class': 'form-control', 'min':1, 'id': 'wool_number'}),
+            'wool': forms.Select(attrs={'class': 'form-control', 'id': 'wool'}),
             'wool_color': forms.TextInput(attrs={'class': 'form-control', 'type': 'color', 'id': 'wool_color'}),
             'wool_weight': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'id': 'wool_weight'}),
             'wool_price': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'id': 'wool_price'}),
