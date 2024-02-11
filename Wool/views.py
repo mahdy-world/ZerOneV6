@@ -58,13 +58,13 @@ class WoolSupplierCreate(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'اضافة مورد خيط'
+        context['title'] = 'اضافة تاجر خيط'
         context['message'] = 'create'
         context['action_url'] = reverse_lazy('Wool:WoolSupplierCreate')
         return context
 
     def get_success_url(self):
-        messages.success(self.request, "تم اضافة مورد خيط جديد", extra_tags="success")
+        messages.success(self.request, "تم اضافة تاجر خيط جديد", extra_tags="success")
         if self.request.POST.get('url'):
             return self.request.POST.get('url')
         else:
@@ -79,13 +79,13 @@ class WoolSupplierUpdate(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'تعديل بيانات مورد خيط: ' + str(self.object)
+        context['title'] = 'تعديل بيانات تاجر خيط: ' + str(self.object)
         context['message'] = 'update'
         context['action_url'] = reverse_lazy('Wool:WoolSupplierUpdate', kwargs={'pk': self.object.id})
         return context
 
     def get_success_url(self, **kwargs):
-        messages.success(self.request, "تم تعديل بيانات مورد خيط بنجاح", extra_tags="success")
+        messages.success(self.request, "تم تعديل بيانات تاجر خيط بنجاح", extra_tags="success")
         return reverse('Wool:WoolSupplierList')
 
 
@@ -100,13 +100,13 @@ class WoolSupplierDelete(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'حذف مورد خيط: ' + str(self.object)
+        context['title'] = 'حذف تاجر خيط: ' + str(self.object)
         context['message'] = 'delete'
         context['action_url'] = reverse_lazy('Wool:WoolSupplierDelete', kwargs={'pk': self.object.id})
         return context
 
     def form_valid(self, form):
-        messages.success(self.request, " تم حذف مورد خيط " + str(self.object) + ' بنجاح ', extra_tags="danger")
+        messages.success(self.request, " تم حذف تاجر خيط " + str(self.object) + ' بنجاح ', extra_tags="danger")
         myform = WoolSupplier.objects.get(id=self.kwargs['pk'])
         myform.deleted = 1
         myform.save()
@@ -124,13 +124,13 @@ class WoolSupplierRestore(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'استرجاع مورد خيط: ' + str(self.object)
+        context['title'] = 'استرجاع تاجر خيط: ' + str(self.object)
         context['message'] = 'restore'
         context['action_url'] = reverse_lazy('Wool:WoolSupplierRestore', kwargs={'pk': self.object.id})
         return context
 
     def form_valid(self, form):
-        messages.success(self.request, " تم استرجاع مورد خيط " + str(self.object) + ' بنجاح ', extra_tags="dark")
+        messages.success(self.request, " تم استرجاع تاجر خيط " + str(self.object) + ' بنجاح ', extra_tags="dark")
         myform = WoolSupplier.objects.get(id=self.kwargs['pk'])
         myform.deleted = 0
         myform.save()
@@ -148,13 +148,13 @@ class WoolSupplierSuperDelete(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'حذف مورد خيط : ' + str(self.object.id) + 'بشكل نهائي'
+        context['title'] = 'حذف تاجر خيط : ' + str(self.object.id) + 'بشكل نهائي'
         context['message'] = 'super_delete'
         context['action_url'] = reverse_lazy('Wool:WoolSupplierSuperDelete', kwargs={'pk': self.object.id})
         return context
 
     def form_valid(self, form):
-        messages.success(self.request, " تم حذف مورد خيط " + str(self.object) + " نهائيا بنجاح ", extra_tags="success")
+        messages.success(self.request, " تم حذف تاجر خيط " + str(self.object) + " نهائيا بنجاح ", extra_tags="success")
         my_form = WoolSupplier.objects.get(id=self.kwargs['pk'])
         my_form.delete()
         return redirect(self.get_success_url())
@@ -195,7 +195,7 @@ def AddWoolSupplierQuantity(request, pk):
         obj.save()
         messages.success(request, " تم اضافة كمية جديدة بنجاح ", extra_tags="success")
     else:
-        messages.error(request, " دث خطأ أثناء اضافة الكمية ", extra_tags="danger")
+        messages.error(request, " حدث خطأ أثناء اضافة الكمية ", extra_tags="danger")
     return redirect('Wool:WoolSupplierQuantity', pk=supplier.id)
 
 

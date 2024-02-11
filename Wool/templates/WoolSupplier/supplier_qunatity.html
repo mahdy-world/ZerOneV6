@@ -86,22 +86,22 @@ table.dataTable thead .sorting_desc_disabled {
                         <div class="page-title-box d-flex align-items-center justify-content-between">
 
                             <h3 class="mb-0 ">
-                                كميات المورد {{ supplier.name }}
+                                كميات التاجر {{ supplier.name }}
                             </h3>
 
                             <div class="page-title-right">
                                 <ol class="breadcrumb m-0">
                                     <li class="breadcrumb-item"><a href="/">الرئيسية</a></li>
                                     {% if supplier.deleted == 0 %}
-                                    <li class="breadcrumb-item"><a href="{% url 'Wool:WoolSupplierList' %}">قائمة موردين الخيط
+                                    <li class="breadcrumb-item"><a href="{% url 'Wool:WoolSupplierList' %}">قائمة تجار الخيط
                                     </a></li>
                                     {% else %}
-                                    <li class="breadcrumb-item"><a href="{% url 'Wool:WoolSupplierTrashList' %}">قائمة موردين الخيط المحذوفة
+                                    <li class="breadcrumb-item"><a href="{% url 'Wool:WoolSupplierTrashList' %}">قائمة تجار الخيط المحذوفة
                                     </a></li>
                                     {% endif %}
 
                                     <li class="breadcrumb-item active">
-                                        كميات المورد {{ supplier.name }}
+                                        كميات التاجر {{ supplier.name }}
                                     </li>
                                 </ol>
                             </div>
@@ -129,9 +129,7 @@ table.dataTable thead .sorting_desc_disabled {
                                                                     <th class="col-lg-2 col-xl-2 col-md-2">
                                                                         {{form.date|as_crispy_field}}
                                                                     </th>
-                                                                    <th class="col-lg-2 col-xl-2 col-md-2">{{form.wool_type|as_crispy_field}}</th>
-                                                                    <th class="col-lg-2 col-xl-2 col-md-2">{{form.wool_company|as_crispy_field}}</th>
-                                                                    <th class="col-lg-2 col-xl-2 col-md-2">{{form.wool_number|as_crispy_field}}</th>
+                                                                    <th class="col-lg-2 col-xl-2 col-md-2">{{form.wool|as_crispy_field}}</th>
                                                                     <th class="col-lg-2 col-xl-2 col-md-2">{{form.wool_color|as_crispy_field}}</th>
                                                                     <th class="col-lg-2 col-xl-2 col-md-2">{{form.wool_weight|as_crispy_field}} </th>
                                                                     <th class="col-lg-2 col-xl-2 col-md-2">{{form.wool_price|as_crispy_field}} </th>
@@ -183,9 +181,10 @@ table.dataTable thead .sorting_desc_disabled {
                                                         <br>
                                                         <div class="table-responsive">
                                                             <table class="table table-centered table-nowrap text-center display" id="Quantable" style="width: 100%">
-                                                                <thead class="thead-light">
+                                                                <thead class="thead-dark">
                                                                     <tr>
                                                                         <th>التاريخ</th>
+                                                                        <th>اسم الخامه</th>
                                                                         <th>نوع الخامة</th>
                                                                         <th>الشركة</th>
                                                                         <th>رقم الخامة</th>
@@ -210,15 +209,23 @@ table.dataTable thead .sorting_desc_disabled {
                                                                         <td>
                                                                             {{x.date|date:'Y-m-d'}}
                                                                         </td>
+
                                                                         <td>
-                                                                            {{x.get_wool_type_display}}
+                                                                            {{x.wool.wool_name}}
                                                                         </td>
+                                                                       
                                                                         <td>
-                                                                            {{x.wool_company}}
+                                                                            {{x.wool.get_wool_type_display}}
                                                                         </td>
+                                                                       
                                                                         <td>
-                                                                            {{x.wool_number}}
+                                                                            {{x.wool.wool_company}}
                                                                         </td>
+                                                                       
+                                                                        <td>
+                                                                            {{x.wool.wool_number}}
+                                                                        </td>
+                                                                       
                                                                         <td>
                                                                            <span style="background-color: {{x.wool_color}}; padding:5px; ">#######</span>
                                                                         </td>
@@ -363,14 +370,14 @@ $(document).ready(function () {
                 };
 
                 total = api
-                    .column(4)
+                    .column(6)
                     .data()
                     .reduce(function (a, b) {
                         return intVal(a) + intVal(b);
                     }, 0);
 
                 pageTotal = api
-                    .column(4, { page: 'current' })
+                    .column(6, { page: 'current' })
                     .data()
                     .reduce(function (a, b) {
                         return intVal(a) + intVal(b);
@@ -390,7 +397,7 @@ $(document).ready(function () {
                         return intVal(a) + intVal(b);
                     }, 0);
 
-                $(api.column(4).footer()).html('' + pageTotal.toFixed(2) + ' ( من ' + total.toFixed(2) + ' )');
+                $(api.column(6).footer()).html('' + pageTotal.toFixed(2) + ' ( من ' + total.toFixed(2) + ' )');
                 $(api.column(2).footer()).html('' + pageTotal2.toFixed(3) + ' ( من ' + total2.toFixed(3) + ' )');
             },
 
@@ -532,6 +539,7 @@ $(document).ready(function () {
 <script>
     $(document).ready(function() {
         $('#ModelFltr').select2();
+        $('#wool').select2();
     });
 </script>
 
