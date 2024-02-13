@@ -163,7 +163,7 @@ class WoolSupplierSuperDelete(LoginRequiredMixin, UpdateView):
 def WoolSupplierQuantityDetail(request, pk):
     supplier = WoolSupplier.objects.get(id=pk)
     quantity = WoolSupplierQuantity.objects.filter(supplier=supplier)
-
+    wool_color = Color.objects.all()
     form = WoolSupplierQuantityForm()
 
     action_url = reverse_lazy('Wool:AddWoolSupplierQuantity', kwargs={'pk': supplier.id})
@@ -181,6 +181,7 @@ def WoolSupplierQuantityDetail(request, pk):
         'action_url': action_url,
         'system_info': system_info,
         'date': datetime.now().date(),
+        'wool_color_objects': wool_color
     }
     return render(request, 'WoolSupplier/supplier_qunatity.html', context)
 

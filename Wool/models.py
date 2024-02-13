@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import date
 from Auth.models import User
+from Core.models import Color
 
 # Create your models here.
 
@@ -29,7 +30,7 @@ WOOL_TYPE = (
 
 
 class Wool(models.Model):
-    wool_created_date = models.DateTimeField(auto_now_add=True, verbose_name="تاريخ الاضافة")
+    wool_created_date = models.DateTimeField(null=True, auto_now_add=True, verbose_name="تاريخ الاضافة")
     wool_date = models.DateField(null=True, default=date.today, verbose_name="التاريخ")
     wool_name = models.CharField(max_length=50, verbose_name="اسم الخامه")
     wool_type = models.IntegerField(choices=WOOL_TYPE, verbose_name="نوع الخامة")
@@ -46,7 +47,7 @@ class WoolSupplierQuantity(models.Model):
     date = models.DateField(null=True, verbose_name="التاريخ", default=date.today)
     supplier = models.ForeignKey(WoolSupplier, on_delete=models.CASCADE, verbose_name="المورد")
     wool =  models.ForeignKey(Wool, on_delete=models.CASCADE, verbose_name='الخامة')
-    wool_color = models.CharField(max_length=50, default="", verbose_name="اللون")
+    wool_color = models.ForeignKey(Color, on_delete=models.CASCADE, verbose_name="اللون")
     wool_weight = models.FloatField(default=0.0, verbose_name="الوزن بالكيلو")
     wool_price = models.FloatField(default=0.0, verbose_name="سعر الكيلو")
     total_account = models.FloatField(default=0.0, verbose_name="اجمالي الحساب")

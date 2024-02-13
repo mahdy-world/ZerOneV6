@@ -28,7 +28,7 @@ class WoolSupplierQuantityForm(forms.ModelForm):
         widgets = {
             'date': forms.DateInput(attrs={'class': 'form-control', 'id': 'date', 'type': 'date'}),
             'wool': forms.Select(attrs={'class': 'form-control', 'id': 'wool'}),
-            'wool_color': forms.TextInput(attrs={'class': 'form-control', 'type': 'color', 'id': 'wool_color'}),
+            'wool_color': forms.Select(attrs={'class': 'form-control', 'id': 'wool_color'}),
             'wool_weight': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'id': 'wool_weight'}),
             'wool_price': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'id': 'wool_price'}),
             'total_account': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'id': 'total_account', 'readonly': 'readonly'}),
