@@ -3,7 +3,7 @@
 {% load mathfilters %}
 {% block title %}
 <title>
-    دفعات المورد {{ supplier.name }}
+    دفعات التاجر {{ supplier.name }}
 </title>
 {% endblock title %}
 
@@ -86,22 +86,22 @@ table.dataTable thead .sorting_desc_disabled {
                         <div class="page-title-box d-flex align-items-center justify-content-between">
 
                             <h3 class="mb-0 ">
-                                دفعات المورد {{ supplier.name }}
+                                دفعات التاجر {{ supplier.name }}
                             </h3>
 
                             <div class="page-title-right">
                                 <ol class="breadcrumb m-0">
                                     <li class="breadcrumb-item"><a href="/">الرئيسية</a></li>
                                     {% if supplier.deleted == 0 %}
-                                    <li class="breadcrumb-item"><a href="{% url 'Wool:WoolSupplierList' %}">قائمة موردين الخيط
+                                    <li class="breadcrumb-item"><a href="{% url 'Wool:WoolSupplierList' %}">قائمة تجار الخيط
                                     </a></li>
                                     {% else %}
-                                    <li class="breadcrumb-item"><a href="{% url 'Wool:WoolSupplierTrashList' %}">قائمة موردين الخيط المحذوفة
+                                    <li class="breadcrumb-item"><a href="{% url 'Wool:WoolSupplierTrashList' %}">قائمة تجار الخيط المحذوفة
                                     </a></li>
                                     {% endif %}
 
                                     <li class="breadcrumb-item active">
-                                        دفعات المورد {{ supplier.name }}
+                                        دفعات التاجر {{ supplier.name }}
                                     </li>
                                 </ol>
                             </div>
@@ -399,10 +399,10 @@ $(document).ready(function () {
                         ' </h1>' +
                         '<h1> ' +
                             'دفعات ' +
-                            'مورد خيط' +
+                            'التاجر خيط' +
                         ' </h1>' +
                         '<h1> ' +
-                            'المورد: ' +
+                            'الالتاجر: ' +
                             '{{ supplier.name }}' +
                         ' </h1>' +
                         '<br>'

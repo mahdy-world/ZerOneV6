@@ -30,3 +30,10 @@ class Modules(models.Model):
 
     def __str__(self):
         return 'عناصر النظام'
+    
+class Color(models.Model):
+    color_name = models.CharField(max_length=50, verbose_name="اسم اللون")
+    color_hex_code = models.CharField(max_length=7, verbose_name="كود اللون")
+    
+    def __str__(self):
+        return self.color_name
