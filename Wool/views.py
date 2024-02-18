@@ -14,6 +14,23 @@ from django.template.loader import render_to_string
 from datetime import datetime
 
 # Create your views here.
+class WoolList(LoginRequiredMixin, ListView):
+    login_url = '/auth/login/'
+    model = Wool
+    paginate_by = 12
+    template_name = 'Wool/wool_list.html'
+
+    def get_queryset(self):
+        queryset = self.model.objects.all().order_by('-id')
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['message'] = 'active'
+        context['count'] = self.model.objects.all().count()
+        return context
+
+
 
 class WoolSupplierList(LoginRequiredMixin, ListView):
     login_url = '/auth/login/'
