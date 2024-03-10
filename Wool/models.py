@@ -48,6 +48,7 @@ class WoolSupplierQuantity(models.Model):
     supplier = models.ForeignKey(WoolSupplier, on_delete=models.CASCADE, verbose_name="المورد")
     wool =  models.ForeignKey(Wool, on_delete=models.CASCADE, verbose_name='الخامة')
     wool_color = models.ForeignKey(Color, on_delete=models.CASCADE, verbose_name="اللون")
+    wool_item_count = models.FloatField(default=0.0, verbose_name="عدد الشكاير")
     wool_weight = models.FloatField(default=0.0, verbose_name="الوزن بالكيلو")
     wool_price = models.FloatField(default=0.0, verbose_name="سعر الكيلو")
     total_account = models.FloatField(default=0.0, verbose_name="اجمالي الحساب")

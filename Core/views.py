@@ -100,9 +100,7 @@ class ColorDelete(LoginRequiredMixin, UpdateView):
     form_class = ColorForm
     template_name = 'forms/form_template.html'
     
-    def get_success_url(self):
-        return reverse('Core:ColorList')
-
+ 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'حذف اللون : ' + str(self.object.color_name)
@@ -114,7 +112,7 @@ class ColorDelete(LoginRequiredMixin, UpdateView):
         messages.success(self.request, " تم حذف اللون " + str(self.object) + " نهائيا بنجاح ", extra_tags="success")
         my_form = Color.objects.get(id=self.kwargs['pk'])
         my_form.delete()
-        return redirect(self.get_success_url())
+        return redirect('Core:ColorList')
     
         
 class SystemInfoCreate(LoginRequiredMixin, CreateView):
