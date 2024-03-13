@@ -4,6 +4,7 @@ from .views import *
 app_name ="Wool"
 urlpatterns = [
     path('WoolList/', WoolList.as_view(), name="WoolList"),
+    path('WoolCreate/', WoolCreate.as_view(), name="WoolCreate"),
     path('WoolSupplierList/', WoolSupplierList.as_view(), name="WoolSupplierList"),
     path('WoolSupplierTrashList/', WoolSupplierTrashList.as_view(), name="WoolSupplierTrashList"),
     path('WoolSupplierCreate/', WoolSupplierCreate.as_view(), name="WoolSupplierCreate"),

@@ -29,6 +29,27 @@ class WoolList(LoginRequiredMixin, ListView):
         context['message'] = 'active'
         context['count'] = self.model.objects.all().count()
         return context
+    
+class WoolCreate(LoginRequiredMixin, CreateView):
+    login_url = '/auth/login/'
+    model = Wool
+    form_class = WoolForm
+    template_name = 'forms/form_template.html'
+    success_url = reverse_lazy('Wool:WoolList')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'اضافة خامة جديدة'
+        context['message'] = 'create'
+        context['action_url'] = reverse_lazy('Wool:WoolCreate')
+        return context
+
+    def get_success_url(self):
+        messages.success(self.request, "تم اضافة خامة جديدة", extra_tags="success")
+        if self.request.POST.get('url'):
+            return self.request.POST.get('url')
+        else:
+            return self.success_url
 
 
 
