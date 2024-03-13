@@ -30,7 +30,6 @@ WOOL_TYPE = (
 
 
 class Wool(models.Model):
-    wool_created_date = models.DateTimeField(null=True, auto_now_add=True, verbose_name="تاريخ الاضافة")
     wool_date = models.DateField(null=True, default=date.today, verbose_name="التاريخ")
     wool_name = models.CharField(max_length=50, verbose_name="اسم الخامه")
     wool_type = models.IntegerField(choices=WOOL_TYPE, verbose_name="نوع الخامة")

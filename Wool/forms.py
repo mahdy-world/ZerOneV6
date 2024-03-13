@@ -11,6 +11,21 @@ class WoolSupplierForm(forms.ModelForm):
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'address': forms.TextInput(attrs={'class': 'form-control'}),
         }
+        
+        
+class WoolForm(forms.ModelForm):
+    class Meta:
+        model = Wool
+        exclude = ['wool_user_created']
+        widgets = {
+            'wool_date': forms.DateInput(attrs={'class': 'form-control', 'id': 'wool_date', 'type': 'date'}),
+            'wool_name': forms.TextInput(attrs={'class': 'form-control', 'id':'wool_name'}),
+            'wool_type': forms.Select(attrs={'class': 'form-control', 'id':'wool_type'}),
+            'wool_company': forms.TextInput(attrs={'class': 'form-control', 'id':'wool_company'}),
+            'wool_number': forms.NumberInput(attrs={'class': 'form-control', 'min':'1', 'id':'wool_number'}),
+            
+            
+        }
 
 class WoolSupplierDeleteForm(forms.ModelForm):
     class Meta:

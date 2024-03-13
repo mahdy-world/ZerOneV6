@@ -148,7 +148,18 @@ table.dataTable thead .sorting_desc_disabled {
                                                     <div class="card-body">
                                                         <br>
                                                         <div class="row">
-                                                            <div class="col-md-3">
+                                                            <div class="col-md-2">
+                                                                <div class="form-group sel" >
+                                                                    <label>فلترة اسم الخامة : </label>
+                                                                    <select id="ModelFltr_wool_name" class="form-control" style="width: 100%;">
+                                                                        <option value=" ">عرض الكل</option>
+                                                                        {% for obj in wool_name %}
+                                                                        <option value="{{obj.wool_name}}">{{obj.wool_name}}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
                                                                 <div class="form-group sel" >
                                                                     <label>فلترة بلون خام : </label>
                                                                     <select id="ModelFltr_color" class="form-control" style="width: 100%;">
@@ -159,7 +170,7 @@ table.dataTable thead .sorting_desc_disabled {
                                                                     </select>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-3">
+                                                            <div class="col-md-2">
                                                                 <div class="form-group sel" >
                                                                     <label>فلترة بنوع الخام: </label>
                                                                     <select id="ModelFltr" class="form-control" style="width: 100%;">
@@ -263,11 +274,11 @@ table.dataTable thead .sorting_desc_disabled {
                                                                         {% if request.user.is_superuser %}
                                                                         {% if not supplier.deleted %}
                                                                         <td>
-                                                                           
+                                                                        
                                                                             <a href="#" class="text-danger" data-toggle="modal" data-target="#DelModal" title="" data-original-title="Delete"><i class="mdi mdi-close font-size-18"
                                                                             onclick="document.getElementById('del_clck').href='{% url 'Wool:DelWoolSupplierQuantity' x.id %}'"
                                                                             ></i></a>
-                                                                            
+                                                                        
                                                                         </td>
                                                                         {% endif %}
                                                                         {% endif %}
@@ -461,7 +472,7 @@ $(document).ready(function () {
                     extend: 'print',
                     text: 'طباعة الجدول',
                     exportOptions: {
-                        columns: [ 0, 1, 5, 6, 7, 9],
+                        columns: [ 0, 1, 6, 7, 9],
                         modifier: {
                             page: 'current'
                         }
@@ -496,6 +507,13 @@ $(document).ready(function () {
                         }
                         else {
                             var model = 'فلترة بنوع خام معين: ' + $("#ModelFltr_color").val();
+                        }
+
+                        if ( $("#ModelFltr_wool_name").val() == ' ' ) {
+                            var model = 'فلترة اسم الخامة : جميع الأنواع';
+                        }
+                        else {
+                            var model = 'فلترة اسم الخامة: ' + $("#ModelFltr_wool_name").val();
                         }
 
 
@@ -585,6 +603,25 @@ $(document).ready(function () {
                     });
                 });
 
+                // filter using wool name
+                this.api().columns([1]).every(function () {
+                    var column = this;
+                    console.log(column);
+                    var select = $("#ModelFltr_wool_name");
+                    column.data().unique().sort().each(function (d, j) {
+                        select
+                            .on('change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex(
+                                    $(this).val()
+                                );
+
+                                column
+                                    .search(this.value)
+                                    .draw();
+                            });
+                    });
+                });
+
                 // filter using wool color
                 this.api().columns([5]).every(function () {
                     var color_column = this;
@@ -621,6 +658,9 @@ $(document).ready(function () {
             width: '100%'
         });
         $('#wool_color').select2({
+            width: '100%'
+        });
+        $('#ModelFltr_wool_name').select2({
             width: '100%'
         });
     });
