@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-<title> الخامة: {{product.name}} </title>
+<title> الخامة: {{wool_object.wool_name}} </title>
 
 {% endblock title %}
 
@@ -36,17 +36,13 @@
 
 
                                 <h4 class="mb-0">
-                                     الخامة {{product.name}}
-                                     <a class="badge badge-success" style="font-size:small;" href="{% url 'Products:ProductCreate' %}" data-toggle="modal" data-target="#action_modal">
+                                     الخامة {{wool_object.wool_name}}
+                                     <a class="badge badge-success" style="font-size:small;" href="{% url 'Wool:WoolCreate' %}" data-toggle="modal" data-target="#action_modal">
                                             <i class="fas fa-plus-square fx-2"></i>
                                     </a>
 
-                                    <a class="badge badge-info" style="font-size:small;" href="{% url 'Products:ProductList' %}">
+                                    <a class="badge badge-info" style="font-size:small;" href="{% url 'Wool:WoolList' %}">
                                        <i class="fas fa-list-ul"></i>
-                                    </a>
-
-                                    <a  class="badge badge-danger" style="font-size:small;" href="{% url 'Products:ProductTrachList' %}">
-                                            <i class="fas fa-trash"></i>
                                     </a>
                                  </h4>
 
@@ -58,14 +54,9 @@
                                     <li class="breadcrumb-item"><a href="/">الرئيسية</a></li>
 
                                     <li class="breadcrumb-item">
-                                        {% if product.deleted %}
-                                        <a href="{% url 'Products:ProductTrachList' %}">قائمة المنتجات المحذوفة</a>
-                                        {% else %}
-                                        <a href="{% url 'Products:ProductList' %}">قائمة المنتجات</a>
-                                        {% endif %}
+                                        <a href="{% url 'Wool:WoolList' %}">قائمة الخامات</a>
                                     </li>
-
-                                    <li class="breadcrumb-item active"> الخامة {{product.name}}</li>
+                                    <li class="breadcrumb-item active"> الخامة {{wool_object.wool_name}}</li>
                                 </ol>
                             </div>
 
@@ -82,208 +73,92 @@
                             <div class="row alert alert-primary">
                                 <div class="col-lg-4">
                                     <span class="font-weight-bold  font-size-14" >
+                                        <i class="fas fa-calendar-alt"></i>
+                                        تاريخ الانشاء:
+                                    </span>
+                                    {{wool_object.wool_date | date:'Y-m-d'}}
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <span class="font-weight-bold  font-size-14" >
                                         <i class="fas fa-paragraph"></i>
                                         أسم الخامة:
                                     </span>
-                                    {{product.name}}
+                                    {{wool_object.wool_name}}
                                 </div>
 
                                 <div class="col-lg-4">
                                     <span class="font-weight-bold font-size-14" >
-                                        <i class="fas fa-business-time"></i>
-                                        الزمن:
+                                        <i class="fas fa-tape"></i>
+                                        نوع الخامة:
                                     </span>
-                                    {{product.time|floatformat:1}} دقيقة
+                                    {{wool_object.get_wool_type_display}}
                                 </div>
 
                                 <div class="col-lg-4">
                                     <span class="font-weight-bold font-size-14" >
-                                        <i class="fas fa-weight"></i>
-                                        الوزن:
+                                        <i class="fas fa-building"></i>
+                                        الشركة:
                                     </span>
-                                    {{product.weight|floatformat:1}} جرام
+                                    {{wool_object.wool_company}} 
                                 </div>
 
                                 <div class="col-lg-4">
                                     <span class="font-weight-bold  font-size-14" >
-                                        <i class="fas fa-dollar-sign"></i>
-                                        التكلفة:
+                                        <i class="far fa-flag"></i>
+                                        رقم الخامة:
                                     </span>
-                                    {{product.cost|floatformat:2}} جنية
+                                    {{wool_object.wool_number}} 
                                 </div>
 
-                                <div class="col-lg-4">
-                                    <span class="font-weight-bold  font-size-14" >
-                                        <i class="fas fa-dollar-sign"></i>
-                                        سعر البيع:
-                                    </span>
-                                    {{product.price|floatformat:2}} جنية
-                                </div>
 
                                 <div class="col-lg-4">
                                     {% if request.user.is_superuser %}
                                     <div>
-                                    {% if product.deleted %}
-                                    <a href="{% url 'Products:ProductRestore' product.id %}" data-toggle="modal" data-target="#action_modal" data-placement="top" title="" data-original-title="Message">
-                                        <span class="badge badge-dark"><i class='bx bx-redo '></i> استرجاع</span>
-                                    </a>
-                                    <a href="{% url 'Products:ProductSuperDelete' product.id %}" data-toggle="modal" data-target="#action_modal" data-placement="top" title="" data-original-title="Profile">
-                                        <span class="badge badge-danger"><i class='bx bxs-trash '   ></i> حذف نهائي </span>
-                                    </a>
-                                    {% else %}
-                                    <a href="{% url 'Products:ProductUpdate' product.id %}" data-toggle="modal" data-target="#action_modal" data-placement="top" title="" data-original-title="Message">
+                                   
+                                    <a href="" data-toggle="modal" data-target="#action_modal" data-placement="top" title="" data-original-title="Message">
                                         <span class="badge  badge-info"><i class='bx bx-edit' ></i>تعديل</span>
                                     </a>
-                                    <a href="{% url 'Products:ProductDelete' product.id %}" data-toggle="modal" data-target="#action_modal" data-placement="top" title="" data-original-title="Profile">
+                                    <a href="" data-toggle="modal" data-target="#action_modal" data-placement="top" title="" data-original-title="Profile">
                                         <span class="badge  badge-danger"><i class='bx bxs-trash'  ></i>حذف</span>
                                     </a>
-                                    {% endif %}
+                
                                     </div>
                                     {% endif %}
                                 </div>
 
                             </div>
-                            <!-- نهاية بيانات المنتج -->
+                            <!-- نهاية بيانات الخام -->
 
 
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs nav-tabs-custom nav-justified" role="tablist">
+                               
                                 <li class="nav-item">
-                                    <a class="nav-link active" data-toggle="tab" href="#ProductTotal" role="tab" aria-selected="true">
-                                        <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
-                                        <span class="d-none d-sm-block"> <i class="fas fa-list"></i>إجماليات</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-
-                                    <a class="nav-link" data-toggle="tab" href="#ProductFactories" role="tab" aria-selected="true">
-                                        <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
-                                        <span class="d-none d-sm-block"><i class="fas fa-dolly"></i>إنتاج المصانع</span>
-                                    </a>
-
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#ProductPayments" role="tab" aria-selected="true">
+                                    <a class="nav-link" data-toggle="tab" href="#ًًWool_color_nav" role="tab" aria-selected="true">
                                         <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
-                                        <span class="d-none d-sm-block"><i class="fas fa-dolly"></i>المبيعات</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#ProductReturns" role="tab" aria-selected="true">
-                                        <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
-                                        <span class="d-none d-sm-block"><i class="fas fa-dolly"></i>المرتجع</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#ProductImports" role="tab" aria-selected="true">
-                                        <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
-                                        <span class="d-none d-sm-block"><i class="fas fa-dolly"></i>الإستيراد</span>
+                                        <span class="d-none d-sm-block"><i class="fas fa-dolly"></i>الالوان</span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#ProductSupplies" role="tab" aria-selected="true">
                                         <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
-                                        <span class="d-none d-sm-block"><i class="fas fa-dolly"></i>التوريد</span>
+                                        <span class="d-none d-sm-block"><i class="fas fa-dolly"></i>الخام الداخل</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#ProductSupplies" role="tab" aria-selected="true">
+                                        <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                                        <span class="d-none d-sm-block"><i class="fas fa-dolly"></i>الخام الخارج</span>
                                     </a>
                                 </li>
                             </ul>
 
                             <!-- Tab panes -->
                             <div class="tab-content text-muted">
-                                <!--إجماليات-->
-                                <div class="tab-pane active" id="ProductTotal" role="tabpanel">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="card" >
-                                                <div class="card-body">
-                                                    <div class="table-responsive text-center">
-                                                        <table class="table table-centered table-striped">
-                                                            <tr>
-                                                                <th>الإفتتاح</th>
-                                                                <th>
-                                                                    {% if product.quantity %}
-                                                                    {{ product.quantity|floatformat:0 }}
-                                                                    {% else %}
-                                                                    0
-                                                                    {% endif %}
-                                                                    قطعة
-                                                                </th>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>إنتاج المصانع</th>
-                                                                <th>
-                                                                    {% if factory_in_sum %}
-                                                                    {{ factory_in_sum|floatformat:0 }}
-                                                                    {% else %}
-                                                                    0
-                                                                    {% endif %}
-                                                                    قطعة
-                                                                </th>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>المبيعات</th>
-                                                                <th>
-                                                                    {% if invoices_sum %}
-                                                                    {{ invoices_sum|floatformat:0 }}
-                                                                    {% else %}
-                                                                    0
-                                                                    {% endif %}
-                                                                    قطعة
-                                                                </th>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>المرتجع</th>
-                                                                <th>
-                                                                    {% if r_invoices_sum %}
-                                                                    {{ r_invoices_sum|floatformat:0 }}
-                                                                    {% else %}
-                                                                    0
-                                                                    {% endif %}
-                                                                    قطعة
-                                                                </th>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>الإستيراد</th>
-                                                                <th>
-                                                                    {% if supplier_sum %}
-                                                                    {{ supplier_sum|floatformat:0 }}
-                                                                    {% else %}
-                                                                    0
-                                                                    {% endif %}
-                                                                    قطعة
-                                                                </th>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>التوريد</th>
-                                                                <th>
-                                                                    {% if importer_sum %}
-                                                                    {{ importer_sum|floatformat:0 }}
-                                                                    {% else %}
-                                                                    0
-                                                                    {% endif %}
-                                                                    قطعة
-                                                                </th>
-                                                            </tr>
-                                                            <tr>
-                                                                <th>الإجمالي</th>
-                                                                <th>
-                                                                    {% if total %}
-                                                                    {{ total|floatformat:0 }}
-                                                                    {% else %}
-                                                                    0
-                                                                    {% endif %}
-                                                                    قطعة
-                                                                </th>
-                                                            </tr>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--إنتاج المصانع-->
-                                <div class="tab-pane " id="ProductFactories" role="tabpanel">
+                                
+                                <!--الالوان-->
+                                <div class="tab-pane active" id="Wool_color_nav" role="tabpanel">
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <div class="card" >
@@ -294,275 +169,41 @@
                                                                 <tr>
                                                                     <th scope="col" >#</th>
                                                                     <th scope="col">
-                                                                        التاريخ
+                                                                       اللون
                                                                     </th>
                                                                     <th scope="col">
-                                                                        المصنع
+                                                                        عدد الشكاير المتاحة
                                                                     </th>
                                                                     <th scope="col">
-                                                                        العدد
+                                                                        الوزن الكلي
                                                                     </th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody class="text-center ">
-                                                              {% for x in factory_in  %}
+                                                              {% for x in wool_color_objects  %}
                                                               <tr>
                                                                 <td>
                                                                     {{forloop.counter}}
                                                                 </td>
                                                                 <td>
-                                                                    <h5 class="font-size-16 ">
-                                                                        {{x.date|date:'Y-m-d'}}
-                                                                    </h5>
-
-                                                                </td>
-                                                                <td>
-                                                                    <h5 class="badge badge-secondary font-size-16">
-                                                                        {{x.factory.name}}
-                                                                    </h5>
-                                                                </td>
-                                                                <td>
-                                                                    <h5 class="badge badge-primary font-size-16">
-                                                                        {{x.product_count|floatformat:0}}
-                                                                    </h5>
-                                                                </td>
-                                                            </tr>
-                                                              {% endfor %}
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--المبيعات-->
-                                <div class="tab-pane" id="ProductPayments" role="tabpanel">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="card" >
-                                                <div class="card-body">
-                                                    <div class="table-responsive">
-                                                        <table class="table table-centered   ">
-                                                            <thead class="thead-light text-center">
-                                                                <tr>
-                                                                    <th scope="col" >#</th>
-                                                                    <th scope="col">
-                                                                        التاريخ
-                                                                    </th>
-                                                                    <th scope="col">
-                                                                        رقم الفاتورة
-                                                                    </th>
-                                                                    <th scope="col">
-                                                                        التاجر/العميل
-                                                                    </th>
-                                                                    <th scope="col">
-                                                                        العدد
-                                                                    </th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody class="text-center ">
-                                                              {% for x in invoices %}
-                                                              <tr>
-                                                                <td>
-                                                                    {{forloop.counter}}
-                                                                </td>
-                                                                <td>
-                                                                    <h5 class="font-size-16 ">
-                                                                        <a href="{% url 'Invoices:InvoiceDetail' x.invoice.id %}" target="_blank">{{x.date|date:'Y-m-d'}}</a>
-                                                                    </h5>
-
-                                                                </td>
-                                                                <td>
-                                                                    <h5 class="badge badge-warning font-size-16">
-                                                                        {{x.invoice.id}}
-                                                                        {% if x.invoice.invoice_type == 1 %}
-                                                                        ، فاتورة
+                                                                    <h5 class="font-size-16 badge badge-pill badge-danger" 
+                                                                    {%  if x.wool_color__color_hex_code == '#FFFFFF' %}
+                                                                        style="background-color: {{x.wool_color__color_hex_code}}; color: black"
                                                                         {% else %}
-                                                                        ، قطاعي
+                                                                        style="background-color: {{x.wool_color__color_hex_code}};"
                                                                         {% endif %}
-                                                                    </h5>
-                                                                </td>
-                                                                <td>
-                                                                    <h5 class="badge badge-secondary font-size-16">
-                                                                        {{x.invoice.seller.name}}
-                                                                        {{x.invoice.customer}}
-                                                                    </h5>
-                                                                </td>
-                                                                <td>
-                                                                    <h5 class="badge badge-primary font-size-16">
-                                                                        {{x.quantity|mul:x.unit|floatformat:0}}
-                                                                    </h5>
-                                                                </td>
-                                                            </tr>
-                                                              {% endfor %}
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--المرتجع-->
-                                <div class="tab-pane" id="ProductReturns" role="tabpanel">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="card" >
-                                                <div class="card-body">
-                                                    <div class="table-responsive">
-                                                        <table class="table table-centered   ">
-                                                            <thead class="thead-light text-center">
-                                                                <tr>
-                                                                    <th scope="col" >#</th>
-                                                                    <th scope="col">
-                                                                        التاريخ
-                                                                    </th>
-                                                                    <th scope="col">
-                                                                        رقم الفاتورة
-                                                                    </th>
-                                                                    <th scope="col">
-                                                                        التاجر
-                                                                    </th>
-                                                                    <th scope="col">
-                                                                        العدد
-                                                                    </th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody class="text-center ">
-                                                              {% for x in r_invoices  %}
-                                                              <tr>
-                                                                <td>
-                                                                    {{forloop.counter}}
-                                                                </td>
-                                                                <td>
-                                                                    <h5 class="font-size-16 ">
-                                                                        <a href="{% url 'Invoices:InvoiceDetail' x.invoice.id %}" target="_blank">{{x.date|date:'Y-m-d'}}</a>
+                                                                         >
+                                                                        {{x.wool_color__color_name}}
                                                                     </h5>
 
                                                                 </td>
                                                                 <td>
-                                                                    <h5 class="badge badge-warning font-size-16">
-                                                                        {{x.invoice.id}}
-                                                                        ، فاتورة
-                                                                    </h5>
-                                                                </td>
-                                                                <td>
-                                                                    <h5 class="badge badge-secondary font-size-16">
-                                                                        {{x.invoice.seller.name}}
-                                                                    </h5>
+                                                                    <h5 class="badge badge-success font-size-16">
+                                                                        {{x.wcount|floatformat:0}} شكارة                                                                    </h5>
                                                                 </td>
                                                                 <td>
                                                                     <h5 class="badge badge-primary font-size-16">
-                                                                        {{x.quantity|mul:x.unit|floatformat:0}}
-                                                                    </h5>
-                                                                </td>
-                                                            </tr>
-                                                              {% endfor %}
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--الإستيراد-->
-                                <div class="tab-pane" id="ProductImports" role="tabpanel">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="card" >
-                                                <div class="card-body">
-                                                    <div class="table-responsive">
-                                                        <table class="table table-centered   ">
-                                                            <thead class="thead-light text-center">
-                                                                <tr>
-                                                                    <th scope="col" >#</th>
-                                                                    <th scope="col">
-                                                                        التاريخ
-                                                                    </th>
-                                                                    <th scope="col">
-                                                                        المورد
-                                                                    </th>
-                                                                    <th scope="col">
-                                                                        العدد
-                                                                    </th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody class="text-center ">
-                                                              {% for x in supplier  %}
-                                                              <tr>
-                                                                <td>
-                                                                    {{forloop.counter}}
-                                                                </td>
-                                                                <td>
-                                                                    <h5 class="font-size-16 ">
-                                                                        {{x.date|date:'Y-m-d'}}
-                                                                    </h5>
-
-                                                                </td>
-                                                                <td>
-                                                                    <h5 class="badge badge-secondary font-size-16">
-                                                                        {{x.supplier.name}}
-                                                                    </h5>
-                                                                </td>
-                                                                <td>
-                                                                    <h5 class="badge badge-primary font-size-16">
-                                                                        {{x.product_count|floatformat:0}}
-                                                                    </h5>
-                                                                </td>
-                                                            </tr>
-                                                              {% endfor %}
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--التوريد-->
-                                <div class="tab-pane" id="ProductSupplies" role="tabpanel">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="card" >
-                                                <div class="card-body">
-                                                    <div class="table-responsive">
-                                                        <table class="table table-centered   ">
-                                                            <thead class="thead-light text-center">
-                                                                <tr>
-                                                                    <th scope="col" >#</th>
-                                                                    <th scope="col">
-                                                                        التاريخ
-                                                                    </th>
-                                                                    <th scope="col">
-                                                                        المستورد
-                                                                    </th>
-                                                                    <th scope="col">
-                                                                        العدد
-                                                                    </th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody class="text-center ">
-                                                              {% for x in importer  %}
-                                                              <tr>
-                                                                <td>
-                                                                    {{forloop.counter}}
-                                                                </td>
-                                                                <td>
-                                                                    <h5 class="font-size-16 ">
-                                                                        {{x.date|date:'Y-m-d'}}
-                                                                    </h5>
-
-                                                                </td>
-                                                                <td>
-                                                                    <h5 class="badge badge-secondary font-size-16">
-                                                                        {{x.supplier.name}}
-                                                                    </h5>
-                                                                </td>
-                                                                <td>
-                                                                    <h5 class="badge badge-primary font-size-16">
-                                                                        {{x.product_count|floatformat:0}}
+                                                                        {{x.qcount}} كيلو جرام
                                                                     </h5>
                                                                 </td>
                                                             </tr>
