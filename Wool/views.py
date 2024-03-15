@@ -52,6 +52,47 @@ class WoolCreate(LoginRequiredMixin, CreateView):
             return self.success_url
 
 
+class WoolUpdate(LoginRequiredMixin, UpdateView):
+    login_url = '/auth/login/'
+    model = Wool
+    form_class = WoolForm
+    template_name = 'forms/form_template.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'تعديل بيانات الخامة: ' + str(self.object)
+        context['message'] = 'update'
+        context['action_url'] = reverse_lazy('Wool:WoolUpdate', kwargs={'pk': self.object.id})
+        return context
+
+    def get_success_url(self, **kwargs):
+        messages.success(self.request, "تم تعديل بيانات الخامة بنجاح", extra_tags="success")
+        return reverse('Wool:WoolList')
+
+
+class WoolSuperDelete(LoginRequiredMixin, UpdateView):
+    login_url = '/auth/login/'
+    model = Wool
+    form_class = WoolDeleteForm
+    template_name = 'forms/form_template.html'
+
+    def get_success_url(self):
+        return reverse('Wool:WoolList')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'حذف الخامة : ' + str(self.object.wool_name) + 'بشكل نهائي'
+        context['message'] = 'super_delete'
+        context['action_url'] = reverse_lazy('Wool:WoolSuperDelete', kwargs={'pk': self.object.id})
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, " تم حذف الخامة " + str(self.object.wool_name) + " نهائيا بنجاح ", extra_tags="success")
+        my_form = Wool.objects.get(id=self.kwargs['pk'])
+        my_form.delete()
+        return redirect(self.get_success_url())
+
+
 
 class WoolSupplierList(LoginRequiredMixin, ListView):
     login_url = '/auth/login/'

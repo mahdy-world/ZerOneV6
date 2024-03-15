@@ -36,6 +36,15 @@ class WoolSupplierDeleteForm(forms.ModelForm):
         }
 
 
+class WoolDeleteForm(forms.ModelForm):
+    class Meta:
+        fields = ['wool_name']
+        model = Wool
+        widgets = {
+            'wool_name': forms.HiddenInput()
+        }
+
+
 class WoolSupplierQuantityForm(forms.ModelForm):
     class Meta:
         model = WoolSupplierQuantity

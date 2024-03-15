@@ -113,20 +113,20 @@
                 </div>
                 <div class="row">
                 {% for x in object_list  %}
-                <div class="col-xl-3 col-md-4 col-sm-6">
+                <div class="col-xl-2 col-md-2- col-sm-6">
                   <div class="card text-center">
                       <div class="card-body">
                           <div class="avatar-sm mx-auto mb-4 mt-5">
                               <span class="avatar-title rounded-circle bg-soft-primary text-primary font-size-16">
-                                <img src="/static/assets/images/vector/supplier.png" alt="" width="150px">
+                                <img src="/static/assets/images/vector/Product wool.png" alt="" width="150px">
 
                               </span>
                           </div><br>
-                          <h3><a href="#" class="text-dark"> {{x.name}}</a></h3>
+                          <h3>
 
                             <div class=" d-flex justify-content-center">
-                                <div style="padding-left: 10px;">
-                                    <h3 class="text-muted "> {{ x.wool_name }}
+                                <div >
+                                    <h3 class="text-bold"> {{ x.wool_name }}
                                     </h3>
                                 </div>
 
@@ -134,9 +134,9 @@
 
                             <div style="margin-top: 5px;">
                                 <div class="contact-links d-flex justify-content-center font-size-20">
-                                    <div class="mr-3">
+                                    <div >
                                        <a href="{% url 'Products:ProductDetails' x.id %}" data-original-title="Message">
-                                           <span class="badge badge-primary"><i class='bx bx-area' ></i>تفاصيل الإنتاج</span>
+                                           <span class="badge badge-primary"><i class='bx bx-area' ></i>تفاصيل الخامة</span>
                                       </a>
                                    </div>
                                 </div>
@@ -148,13 +148,13 @@
                             {% if message == "active"  %}
 
                             <div class="mr-3">
-                                 <a href="{% url 'Wool:WoolSupplierUpdate' x.id %}" data-toggle="modal" data-target="#action_modal" data-placement="top" title="" data-original-title="Message">
+                                 <a href="{% url 'Wool:WoolUpdate' x.id %}" data-toggle="modal" data-target="#action_modal" data-placement="top" title="" data-original-title="Message">
                                      <span class="badge  badge-info"><i class='bx bx-edit' ></i>تعديل</span>
                                 </a>
                              </div>
     
                             <div class="">
-                                <a href="{% url 'Wool:WoolSupplierDelete' x.id %}" data-toggle="modal" data-target="#action_modal" data-placement="top" title="" data-original-title="Profile">
+                                <a href="{% url 'Wool:WoolSuperDelete' x.id %}" data-toggle="modal" data-target="#action_modal" data-placement="top" title="" data-original-title="Profile">
                                     <span class="badge  badge-danger"><i class='bx bxs-trash'  ></i>حذف</span>
                                 </a>
                             </div>
