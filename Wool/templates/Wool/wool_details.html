@@ -186,20 +186,16 @@
                                                                     {{forloop.counter}}
                                                                 </td>
                                                                 <td>
-                                                                    <h5 class="font-size-16 badge badge-pill badge-danger" 
-                                                                    {%  if x.wool_color__color_hex_code == '#FFFFFF' %}
-                                                                        style="background-color: {{x.wool_color__color_hex_code}}; color: black"
-                                                                        {% else %}
-                                                                        style="background-color: {{x.wool_color__color_hex_code}};"
-                                                                        {% endif %}
-                                                                         >
-                                                                        {{x.wool_color__color_name}}
-                                                                    </h5>
+                                                                    <span class="badge badge-pill " style="background-color: {{x.wool_color__color_hex_code}}">.</span>
+                                                                    {{x.wool_color__color_name}}
+                                                                  
+                                                                </td>
 
                                                                 </td>
                                                                 <td>
                                                                     <h5 class="badge badge-success font-size-16">
-                                                                        {{x.wcount|floatformat:0}} شكارة                                                                    </h5>
+                                                                        {{x.wcount|floatformat:0}} شكارة
+                                                                    </h5>
                                                                 </td>
                                                                 <td>
                                                                     <h5 class="badge badge-primary font-size-16">
