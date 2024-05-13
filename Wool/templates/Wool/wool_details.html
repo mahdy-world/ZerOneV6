@@ -207,6 +207,15 @@
                                                             </tbody>
                                                         </table>
                                                     </div>
+
+                                                    <div class="row text-center in_pagination">
+                                                        <div class="col-md-12">
+                                                            <button class="btn btn-dark in_prev">السابق</button>
+                                                            <span class="in_page"></span>
+                                                            <button class="btn btn-dark in_next">التالي</button>
+                                                        </div>
+                                                    </div>
+                                                    <br>
                                                 </div>
                                             </div>
                                         </div>
@@ -223,6 +232,61 @@
           </div>
       </div>
 </div>
+
+<!-- pagiation code  -->
+<script>
+    $(document).ready(function() {
+      var itemsPerPage = 10;
+      var currentPage = 1;
+
+      function showItems() {
+        var startIndex = (currentPage - 1) * itemsPerPage;
+        var endIndex = startIndex + itemsPerPage;
+
+        $('.in_pag tbody tr').hide();
+        $('.in_pag tbody tr').slice(startIndex, endIndex).show();
+        $('.in_page').empty();
+
+        var totalItems = $('.in_pag tbody tr').length;
+        var totalPages = Math.ceil(totalItems / itemsPerPage);
+
+        $('.in_prev').prop('disabled', currentPage === 1);
+        $('.in_next').prop('disabled', currentPage === totalPages);
+
+        for (var i = 1; i <= totalPages; i++) {
+          var pageButton = $('<button>').text(i);
+          pageButton.addClass('btn');
+          if (i === currentPage) {
+            pageButton.addClass('active bg-warning');
+          }
+          pageButton.click(function() {
+            currentPage = parseInt($(this).text());
+            showItems();
+          });
+          $('.in_page').append(pageButton);
+        }
+      }
+
+      $('.in_prev').click(function() {
+        if (currentPage > 1) {
+          currentPage--;
+          showItems();
+        }
+      });
+
+      $('.in_next').click(function() {
+        var totalItems = $('.in_pag tbody tr').length;
+        var totalPages = Math.ceil(totalItems / itemsPerPage);
+
+        if (currentPage < totalPages) {
+          currentPage++;
+          showItems();
+        }
+      });
+
+      showItems();
+    });
+  </script>
 {% endblock main %}
                
                 

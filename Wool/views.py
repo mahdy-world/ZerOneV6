@@ -95,7 +95,7 @@ class WoolSuperDelete(LoginRequiredMixin, UpdateView):
 def WoolDetails(request, pk):
     wool_object = Wool.objects.get(id=pk)
     wool_color_objects = WoolSupplierQuantity.objects.filter(wool__id=wool_object.id).values('wool_color__color_name').annotate(wcount=Sum('wool_item_count'), qcount=Sum('wool_weight'))
-    print(wool_color_objects)
+
     
     # action_url = reverse_lazy('Wool:AddWoolSupplierQuantity', kwargs={'pk': supplier.id})
     system_info = SystemInformation.objects.all()
