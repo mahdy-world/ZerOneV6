@@ -92,10 +92,11 @@ class WoolSuperDelete(LoginRequiredMixin, UpdateView):
         my_form.delete()
         return redirect(self.get_success_url())
 
+
 def WoolDetails(request, pk):
     wool_object = Wool.objects.get(id=pk)
     wool_color_objects = WoolSupplierQuantity.objects.filter(wool__id=wool_object.id).values('wool_color__color_name').annotate(wcount=Sum('wool_item_count'), qcount=Sum('wool_weight'))
-
+    supplier = WoolSupplier.objects.all()
     
     # action_url = reverse_lazy('Wool:AddWoolSupplierQuantity', kwargs={'pk': supplier.id})
     system_info = SystemInformation.objects.all()
@@ -104,12 +105,17 @@ def WoolDetails(request, pk):
     else:
         system_info = None
 
+    # inside form
+    inside_form = WoolQuantityForm()
+    
+    
     context = {
         # 'action_url': action_url,
         'wool_color_objects':wool_color_objects, 
         'system_info': system_info,
         'date': datetime.now().date(),
-        'wool_object': wool_object
+        'wool_object': wool_object,
+        'inside_form': inside_form
     }
     return render(request, 'Wool/wool_details.html', context)
 
