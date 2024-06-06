@@ -96,7 +96,7 @@ Fact_Type = (
 
 class Supplier(models.Model):
     created = models.DateTimeField(auto_now_add=True, verbose_name="تاريخ الاضافة")
-    name = models.CharField(max_length=50, verbose_name="إسم المصنع")
+    name = models.CharField(max_length=50, verbose_name="الاسم")
     phone = models.CharField(max_length=11, null=True, blank=True, verbose_name='رقم الهاتف')
     address = models.CharField(max_length=250, verbose_name='العنوان', null=True, blank=True)
     type = models.IntegerField(choices=Fact_Type, default=0, verbose_name="نوع المصنع")

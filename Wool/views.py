@@ -92,11 +92,14 @@ class WoolSuperDelete(LoginRequiredMixin, UpdateView):
         my_form.delete()
         return redirect(self.get_success_url())
 
+
 def WoolDetails(request, pk):
     wool_object = Wool.objects.get(id=pk)
     wool_color_objects = WoolSupplierQuantity.objects.filter(wool__id=wool_object.id).values('wool_color__color_name').annotate(wcount=Sum('wool_item_count'), qcount=Sum('wool_weight'))
+    quantity = WoolSupplierQuantity.objects.filter(wool=wool_object).order_by('-id')
 
-    
+    wool_color_filter = Color.objects.all()
+    wool_objects_supplier = WoolSupplier.objects.all()
     # action_url = reverse_lazy('Wool:AddWoolSupplierQuantity', kwargs={'pk': supplier.id})
     system_info = SystemInformation.objects.all()
     if system_info.count() > 0:
@@ -104,14 +107,45 @@ def WoolDetails(request, pk):
     else:
         system_info = None
 
+    # inside form
+    inside_form = WoolQuantityForm()
+    action_url = reverse_lazy('Wool:AddWoolQuantity', kwargs={'pk': wool_object.id})
+    
     context = {
-        # 'action_url': action_url,
         'wool_color_objects':wool_color_objects, 
         'system_info': system_info,
         'date': datetime.now().date(),
-        'wool_object': wool_object
+        'wool_object': wool_object,
+        'inside_form': inside_form,
+        'action_url': action_url,
+        'quantity': quantity,
+        'wool_color_filter': wool_color_filter,
+        'wool_objects_supplier': wool_objects_supplier
     }
     return render(request, 'Wool/wool_details.html', context)
+
+def AddWoolQuantity(request, pk):
+    wool_object = Wool.objects.get(id=pk)
+    form = WoolQuantityForm(request.POST or None)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.wool = wool_object
+        obj.admin = request.user
+        obj.save()
+        messages.success(request, " تم اضافة كمية جديدة بنجاح ", extra_tags="success")
+    else:
+        messages.error(request, " حدث خطأ أثناء اضافة الكمية ", extra_tags="danger")
+    return redirect('Wool:WoolDetails', pk=wool_object.id)
+
+
+def DelWoolQuantity(request, pk):
+    quant = WoolSupplierQuantity.objects.get(id=pk)
+    id = quant.wool.id
+    quant.delete()
+    messages.success(request, " تم حذف كمية بنجاح ", extra_tags="success")
+    return redirect('Wool:WoolDetails', pk=id)
+
+
 
 
 class WoolSupplierList(LoginRequiredMixin, ListView):

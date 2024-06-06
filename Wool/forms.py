@@ -23,8 +23,6 @@ class WoolForm(forms.ModelForm):
             'wool_type': forms.Select(attrs={'class': 'form-control', 'id':'wool_type'}),
             'wool_company': forms.TextInput(attrs={'class': 'form-control', 'id':'wool_company'}),
             'wool_number': forms.NumberInput(attrs={'class': 'form-control', 'min':'1', 'id':'wool_number'}),
-            
-            
         }
 
 class WoolSupplierDeleteForm(forms.ModelForm):
@@ -44,7 +42,7 @@ class WoolDeleteForm(forms.ModelForm):
             'wool_name': forms.HiddenInput()
         }
 
-
+# form on the supplier details to add new quantity for supplier
 class WoolSupplierQuantityForm(forms.ModelForm):
     class Meta:
         model = WoolSupplierQuantity
@@ -52,6 +50,22 @@ class WoolSupplierQuantityForm(forms.ModelForm):
         widgets = {
             'date': forms.DateInput(attrs={'class': 'form-control', 'id': 'date', 'type': 'date'}),
             'wool': forms.Select(attrs={'class': 'form-control', 'id': 'wool'}),
+            'wool_color': forms.Select(attrs={'class': 'form-control', 'id': 'wool_color'}),
+            'wool_item_count': forms.NumberInput(attrs={'class': 'form-control', 'min':'1', 'id': 'wool_item_count'}),
+            'wool_weight': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'id': 'wool_weight'}),
+            'wool_price': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'id': 'wool_price'}),
+            'total_account': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'id': 'total_account', 'readonly': 'readonly'}),
+        }
+
+
+# form on the wool details to add new quntity on for wool 
+class WoolQuantityForm(forms.ModelForm):
+    class Meta:
+        model = WoolSupplierQuantity
+        fields = ['date', 'supplier', 'wool_color', 'wool_item_count','wool_weight', 'wool_price', 'total_account']
+        widgets = {
+            'date': forms.DateInput(attrs={'class': 'form-control', 'id': 'date', 'type': 'date'}),
+            'supplier': forms.Select(attrs={'class': 'form-control', 'id': 'supplier'}),
             'wool_color': forms.Select(attrs={'class': 'form-control', 'id': 'wool_color'}),
             'wool_item_count': forms.NumberInput(attrs={'class': 'form-control', 'min':'1', 'id': 'wool_item_count'}),
             'wool_weight': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'id': 'wool_weight'}),
