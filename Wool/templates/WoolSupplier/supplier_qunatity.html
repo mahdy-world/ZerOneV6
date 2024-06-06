@@ -147,6 +147,7 @@ table.dataTable thead .sorting_desc_disabled {
 
                                                     <div class="card-body">
                                                         <br>
+                                                        <!-- filter -->
                                                         <div class="row">
                                                             <div class="col-md-2">
                                                                 <div class="form-group sel" >
@@ -201,6 +202,7 @@ table.dataTable thead .sorting_desc_disabled {
                                                             </div>
                                                         </div>
                                                         <br>
+                                                        <!-- wool_data -->
                                                         <div class="table-responsive">
                                                             <table class="table table-centered table-nowrap text-center display" id="Quantable" style="width: 100%">
                                                                 <thead class="thead-dark">
@@ -355,6 +357,7 @@ table.dataTable thead .sorting_desc_disabled {
 
 
 {% block js %}
+<!-- datatable script -->
 <script>
 $.fn.dataTableExt.afnFiltering.push(
     function( oSettings, aData, iDataIndex ) {
@@ -650,6 +653,7 @@ $(document).ready(function () {
 });
 </script>
 
+<!-- select2 script -->
 <script>
     $(document).ready(function() {
         $('#ModelFltr').select2();
@@ -666,6 +670,7 @@ $(document).ready(function () {
     });
 </script>
 
+<!-- calculate total account -->
 <script>
     $( '#wool_weight' ).on('change keyup', function () {
         var wool_weight = parseFloat(this.value);
@@ -680,4 +685,5 @@ $(document).ready(function () {
     });
 
 </script>
+
 {% endblock js %}
