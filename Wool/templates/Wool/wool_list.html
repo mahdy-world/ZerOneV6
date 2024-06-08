@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load wool_tags %}
 {% block title %}
 <title>قائمة الخامات</title>
 
@@ -121,6 +122,7 @@
                                         <tr>
                                             <th scope="col" style="width: 100px">#</th>
                                             <th scope="col">اسم الخامة</th>
+                                            <th scope="col">الالوان المتاحة</th>
                                             <th scope="col">عدد الشكاير</th>
                                             <th scope="col">الوزن الكلي</th>
                                             <th scope="col">العمليات</th>
@@ -128,14 +130,38 @@
                                     </thead>
                                     <tbody>
                                         {% for x in object_list %}
+                                        {% color_total x.id as has_total_wool_item %}
+                                        {% weight_total x.id as has_total_wool_weight %}
+                                        {% avalibale_color x.id as has_avaliable_color %}
                                         <tr>
                                             <td><img src="/static/assets/images/vector/Product wool.png" alt="" class="avatar-lg"></td>
                                             <td>
-                                                <h4><a href="{% url 'Wool:WoolDetails' x.id %}" class="text-dark">{{ x.wool_name }}</a></h4>
+                                                <h3><a href="{% url 'Wool:WoolDetails' x.id %}" class="text-dark">{{ x.wool_name }}</a></h3>
                                                 <p class="text-muted mb-0">{{ x.get_wool_type_display}}</p>
                                             </td>
-                                            <td><span class="badge badge-success">50</span> شكارة</td>
-                                            <td><span class="badge badge-primary">200</span> كيلو جرام</td>
+                                            <td>
+                                                {% if has_avaliable_color %}
+                                                    {% for w in has_avaliable_color %} 
+                                                    <span
+                                                    style="background-color: {{w.wool_color.color_hex_code}}; color: black"
+                                                    >
+                                                    {{w.wool_color__color_name }} - 
+                                                    </span>
+                                                    {% endfor %}
+                                                 
+                                                 {% else  %} 
+                                                    لا يوجد الوان متاحة
+                                                 {% endif %}
+                                               
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-success">{% if has_total_wool_item %} {{ has_total_wool_item }} {% else %} 00.0 {% endif %}
+                                                </span> شكارة
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-success">{% if has_total_wool_weight %} {{ has_total_wool_weight }} {% else %} 00.0 {% endif %}
+                                                </span> كيلو جرام
+                                            </td>
                                             <td>
                                                 <div class="team">
                                                     <a href="{% url 'Wool:WoolDetails' x.id %}" data-original-title="Message">
