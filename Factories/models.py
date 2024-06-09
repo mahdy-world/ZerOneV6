@@ -1,7 +1,8 @@
 from datetime import date
-
+from Wool.models import Wool
 from django.db import models
 from Auth.models import User
+from Core.models import Color
 
 from Products.models import Product
 
@@ -49,9 +50,9 @@ class FactoryOutSide(models.Model):
     created = models.DateTimeField(auto_now_add=True, verbose_name="تاريخ العملية")
     date = models.DateField(null=True, verbose_name="التاريخ", default=date.today)
     factory = models.ForeignKey(Factory, on_delete=models.CASCADE, verbose_name="المصنع")
+    wool = models.ForeignKey(Wool, on_delete=models.SET_NULL, null=True, verbose_name="الخامة")
+    color = models.ForeignKey(Color, on_delete=models.SET_NULL, null=True, verbose_name="اللون")
     weight = models.FloatField(null=True, verbose_name="الوزن بالكيلو")
-    wool_type = models.IntegerField(choices=WOOL_TYPE, null=True, blank=True, verbose_name="نوع الخامة")
-    color = models.CharField(null=True, max_length=50, blank=True, verbose_name="اللون")
     percent_loss = models.FloatField(null=True, verbose_name="الهالك (نسبة مؤية)")
     weight_after_loss = models.FloatField(null=True, verbose_name="الوزن بعد الهالك")
     admin = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name="المسئول")
@@ -61,6 +62,7 @@ class FactoryOutSide(models.Model):
 
 
 PRODUCT_TYPE = (
+    
     (1,"صدر"),
     (2,"ضهر"),
     (3,"كم"),

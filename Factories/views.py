@@ -361,10 +361,10 @@ class FactoryOutSide_div(LoginRequiredMixin, DetailView):
         queryset_outside = FactoryOutSide.objects.filter(factory=self.object)
         if queryset_outside:
             context['last_outside_id'] = queryset_outside.last().id
-        wool_val = self.request.GET.get('wool_val')
+        # wool_val = self.request.GET.get('wool_val')
         date_val = self.request.GET.get('date_val')
-        if wool_val:
-            queryset_outside = queryset_outside.filter(wool_type=int(wool_val))
+        # if wool_val:
+        #     queryset_outside = queryset_outside.filter(wool_type=int(wool_val))
         if date_val:
             queryset_outside = queryset_outside.filter(date=date_val)
 

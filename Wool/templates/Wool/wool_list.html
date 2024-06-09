@@ -130,36 +130,39 @@
                                     </thead>
                                     <tbody>
                                         {% for x in object_list %}
+                                        <!-- template tags objects -->
                                         {% color_total x.id as has_total_wool_item %}
                                         {% weight_total x.id as has_total_wool_weight %}
                                         {% avalibale_color x.id as has_avaliable_color %}
-                                        <tr>
+                                        <tr style="background-color: #f6f6f6eb">
                                             <td><img src="/static/assets/images/vector/Product wool.png" alt="" class="avatar-lg"></td>
                                             <td>
                                                 <h3><a href="{% url 'Wool:WoolDetails' x.id %}" class="text-dark">{{ x.wool_name }}</a></h3>
-                                                <p class="text-muted mb-0">{{ x.get_wool_type_display}}</p>
+                                                <p class="text-muted mb-0"> النوع: {{ x.get_wool_type_display}}</p>
                                             </td>
                                             <td>
-                                                {% if has_avaliable_color %}
-                                                    {% for w in has_avaliable_color %} 
-                                                    <span
-                                                    style="background-color: {{w.wool_color.color_hex_code}}; color: black"
-                                                    >
-                                                    {{w.wool_color__color_name }} - 
-                                                    </span>
-                                                    {% endfor %}
-                                                 
-                                                 {% else  %} 
-                                                    لا يوجد الوان متاحة
-                                                 {% endif %}
-                                               
+                                            "
+                                            {% if has_avaliable_color %}
+                                                {% for w in has_avaliable_color %} 
+                                                <span
+                                                style="font-weight:bold; font-style:italic"
+                                                >
+                                                {{w.wool_color__color_name }} - 
+                                                </span>
+                                                {% endfor %}
+                                             
+                                            {% else  %} 
+                                                لا يوجد الوان متاحة
+                                            {% endif %} 
+                                            "
+                                                    
                                             </td>
                                             <td>
                                                 <span class="badge badge-success">{% if has_total_wool_item %} {{ has_total_wool_item }} {% else %} 00.0 {% endif %}
                                                 </span> شكارة
                                             </td>
                                             <td>
-                                                <span class="badge badge-success">{% if has_total_wool_weight %} {{ has_total_wool_weight }} {% else %} 00.0 {% endif %}
+                                                <span class="badge badge-warning">{% if has_total_wool_weight %} {{ has_total_wool_weight }} {% else %} 00.0 {% endif %}
                                                 </span> كيلو جرام
                                             </td>
                                             <td>
