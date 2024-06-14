@@ -60,13 +60,14 @@ class FactoryPaymentReportForm(forms.Form):
         
 class FactoryOutSideForm(forms.ModelForm):
     class Meta:
-        fields = ['date', 'weight','wool', 'color', 'percent_loss', 'weight_after_loss' ]
+        fields = ['date', 'weight','wool', 'wool_count_item',  'percent_loss', 'weight_after_loss' ]
         model = FactoryOutSide
         widgets = {
             'date' : forms.TextInput(attrs={'type':'date', 'class':'form-control',  'placeholder':'تاريخ الخروج...', 'id':'datee'}),
-            'wool' : forms.Select(attrs={'class':'form-control', 'min':'1', 'placeholder':'الخامة...', 'id':'wool'}),
+            'wool' : forms.Select(attrs={'class':'form-control',  'placeholder':'الخامة...', 'id':'wool'}),
+            'wool_count_item' : forms.NumberInput(attrs={'class':'form-control', 'min':'1', 'placeholder':'عددالشكاير...', 'id':'wool_count_item'}),
             'weight' : forms.NumberInput(attrs={'class':'form-control', 'min':'1', 'placeholder':'الوزن...', 'id':'weight'}),
-            'color' : forms.TextInput(attrs={'class':'form-control', 'min':'1', 'placeholder':'اللون...', 'id':'color'}),
+            # 'color' : forms.Select(attrs={'class':'form-control', 'placeholder':'اللون...', 'id':'color'}),
             'percent_loss' : forms.NumberInput(attrs={'class':'form-control', 'min':'1', 'placeholder':'نسبة الهالك...', 'id':'percent_loss'}),
             'weight_after_loss' : forms.NumberInput(attrs={'class':'form-control', 'min':'1', 'placeholder':'الوزن بعدالهالك...', 'id':'weight_after_loss'}),
         }
@@ -81,7 +82,7 @@ class FactoryInSideForm(forms.ModelForm):
         widgets = {
             'date' : forms.TextInput(attrs={'type':'date', 'class':'form-control',  'placeholder':'تاريخ الاستلام...', 'id':'date_inside'}),
             'weight' : forms.NumberInput(attrs={ 'class':'form-control', 'min':'1', 'placeholder':'الوزن المستلم...', 'id':'weight_inside'}),
-            'color' : forms.TextInput(attrs={ 'class':'form-control', 'placeholder':' اللون...', 'id':'color_inside'}),
+            'color' : forms.Select(attrs={ 'class':'form-control', 'placeholder':' اللون...', 'id':'color_inside'}),
             'wool_type' : forms.Select(attrs={'class':'form-control',  'placeholder':'نوع الخامة...', 'id':'wool_type_inside'}),
             'product' : forms.Select(attrs={ 'class':'form-control', 'placeholder':' المنتج...', 'id':'product'}),
             'product_weight' : forms.NumberInput(attrs={ 'class':'form-control', 'min':'1', 'placeholder':' وزن القطعة...', 'id':'product_weight'}),

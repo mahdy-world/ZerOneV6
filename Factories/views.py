@@ -12,6 +12,7 @@ from django.contrib import messages
 import weasyprint
 from django.template.loader import render_to_string
 from datetime import datetime
+from Wool.models import Wool, WoolSupplierQuantity
 
 
 class FactoryList(LoginRequiredMixin, ListView):
@@ -496,11 +497,15 @@ def FactoryOutSideCreate(request):
         factory = Factory.objects.get(id=factory_id)
 
         date = request.POST.get('date')
+        wool_count_item= request.POST.get('wool_count_item')
+        wool= request.POST.get('wool')
         weight = request.POST.get('weight')
-        color = request.POST.get('color')
         wool_type = request.POST.get('wool_type')
         percent_loss = request.POST.get('percent_loss')
         weight_after_loss = request.POST.get('weight_after_loss')
+        color = request.POST.get('color')
+        color_object = Color.objects.get(id=color)
+        wool_object = Wool.objects.get(id=wool)
 
         if factory_id and date and weight and percent_loss and weight_after_loss:
             obj = FactoryOutSide()
@@ -508,7 +513,9 @@ def FactoryOutSideCreate(request):
             obj.date = date
             obj.admin = request.user
             obj.weight = weight
-            obj.color = color
+            obj.color = color_object
+            obj.wool_count_item = wool_count_item
+            obj.wool = wool_object
             if wool_type:
                 obj.wool_type = wool_type
             else:
@@ -774,6 +781,26 @@ def PrintAll(request, pk):
     pdf = html.write_pdf(stylesheets=[weasyprint.CSS('static/assets/css/invoice_pdf.css')], presentational_hints=True)
     response = HttpResponse(pdf, content_type='application/pdf')
     return response
+
+# filter color based on wool item 
+def FactoryOutSide_color_filter(request):
+    # wool id that returend from wool input 
+    e = request.GET.get('e')
+    print(e)
+    # get wool object 
+    wool_object = Wool.objects.get(id=int(e))
+    # colors with id, name, color avaliable count, for wool item 
+    wool_color_objects = WoolSupplierQuantity.objects.filter(wool__id=wool_object.id).values('wool_color__id', 'wool_color__color_name').annotate(wcount=Sum('wool_item_count'))
+    
+    # convert queryset to list 
+    if wool_color_objects:
+        wool_color_objects_var = list(wool_color_objects)
+    else: 
+        wool_color_objects_var = 0
+    data = json.dumps({
+        'wool_color_objects': wool_color_objects_var,
+    })
+    return HttpResponse(data, content_type='application/json')
 
 
 def get_product_weight_time(request):
