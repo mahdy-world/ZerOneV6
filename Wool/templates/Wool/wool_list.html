@@ -90,20 +90,20 @@
                     <div class="col-lg-3"></div>
                     <div class="col-lg-3">
                         {% if message == "active" %}
-                        <form class="app-search d-none d-lg-block" method="get" action="{% url 'Core:WoolSupplierSearch' %}">
+                        <form class="app-search d-none d-lg-block" method="get" action="{% url 'Core:WoolSearch' %}">
                             <div class="position-relative" >
 
-                                <input type="text" style="background-color: white" value="{{wool_supplier_search}}" list="wool_supp" autocomplete="off" class="form-control" name="wool_supplier"
+                                <input type="text" style="background-color: white" value="{{wool_search}}" list="wool_se" autocomplete="off" class="form-control" name="wool"
                                        placeholder="بحث ... بإسم الخامه"
                                 >
                                 <span >
                                     <button class="bx bx-search-alt btn btn-warning" type="submit">
                                     </button>
                                 </span>
-                                <datalist id="wool_supp" >
-                                    {% for supp in wool_suppliers %}
-                                        <option value="{{ supp.name }}">
-                                            {{ supp.name }}
+                                <datalist id="wool_se" >
+                                    {% for wool in wool_object_serach %}
+                                        <option value="{{wool.wool_name}}">
+                                            {{ wool.wool_name }}
                                             </option>
                                     {% endfor %}
                                 </datalist>
@@ -147,7 +147,7 @@
                                                 <span
                                                 style="font-weight:bold; font-style:italic"
                                                 >
-                                                {{w.wool_color__color_name }} - 
+                                                {{w.color__color_name }} - 
                                                 </span>
                                                 {% endfor %}
                                              

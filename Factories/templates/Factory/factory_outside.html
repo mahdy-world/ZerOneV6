@@ -273,11 +273,15 @@
                                         $.ajax({
                                             url: "{% url 'Factories:FactoryOutSide_color_filter' %}?e=" + e,
                                             success: function (data) {
+                                                let selectElement = document.getElementById('color');
+                                                    selectElement.innerHTML = '';
+                                                    selectElement.val = '';
                                                 if (data.wool_color_objects != 0) {
                                                     //console.log(data.wool_color_objects)
                                                     // Select the existing select input by its ID
                                                     let selectElement = document.getElementById('color');
                                                     selectElement.innerHTML = '';
+                                                    selectElement.val = '';
 
                                                     // Loop through the object properties
                                                     for (let key in data.wool_color_objects) {
@@ -285,8 +289,8 @@
                                                         if (data.wool_color_objects.hasOwnProperty(key)) {
                                                             // Create an option element
                                                             let nestedData =  data.wool_color_objects[key];
-                                                            let color_name = nestedData.wool_color__color_name;  // Access the 'name' property
-                                                            let color_id = nestedData.wool_color__id;
+                                                            let color_name = nestedData.color__color_name;  // Access the 'name' property
+                                                            let color_id = nestedData.color__id;
                                                             let color_cont_item = nestedData.wcount;
 
                                                             let optionElement = document.createElement('option');
@@ -303,6 +307,7 @@
                                                     // set the select element to null value if we not found color values for wool  
                                                     let selectElement = document.getElementById('color');
                                                     selectElement.innerHTML = '';
+                                                    selectElement.val = '';
                                                 }
                                             }
                                         });
@@ -360,10 +365,13 @@
                                                 $('#weight_after_loss').val('');
                                                 $('#wool_count_item').val('');
                                                 $('#wool').val('');
+                                                let selectElement = document.getElementById('color');
+                                                selectElement.innerHTML = '';
                                                 $('#outside').html('&nbsp;').load("{% url 'Factories:FactoryOutSide_div' object.id %}");
                                                 alert("تم الاضافة بنجاح");
                                                 $( '#inside' ).html( '&nbsp;' ).load( "{% url 'Factories:FactoryInSide_div' object.id %}");
                                                 $("#paymnet").html("&nbsp;").load("{% url 'Factories:FactoryPayment_div' object.id %}");
+                                              
                                             } else {
                                                 alert("حاول مرة اخري / خطأ في البيانات");
                                             }

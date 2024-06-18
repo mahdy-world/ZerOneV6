@@ -39,7 +39,15 @@ class Wool(models.Model):
     
     def __str__(self):
         return self.wool_name
-
+    
+class WoolColor(models.Model):
+    wool = models.ForeignKey(Wool, on_delete=models.CASCADE, verbose_name="الخامة")
+    color = models.ForeignKey(Color, on_delete=models.CASCADE, verbose_name="اللون")
+    count = models.FloatField(default=0.0, verbose_name="العدد")
+    weight = models.FloatField(default=0.0, verbose_name="الوزن")
+    
+    def __str__(self):
+        return f'{self.wool.wool_name} - {self.color.color_name}'
 
 class WoolSupplierQuantity(models.Model):
     created = models.DateTimeField(auto_now_add=True, verbose_name="تاريخ العملية")
