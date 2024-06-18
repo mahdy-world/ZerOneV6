@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load wool_tags %}
 {% block title %}
 <title>قائمة الخامات</title>
 
@@ -89,20 +90,20 @@
                     <div class="col-lg-3"></div>
                     <div class="col-lg-3">
                         {% if message == "active" %}
-                        <form class="app-search d-none d-lg-block" method="get" action="{% url 'Core:WoolSupplierSearch' %}">
+                        <form class="app-search d-none d-lg-block" method="get" action="{% url 'Core:WoolSearch' %}">
                             <div class="position-relative" >
 
-                                <input type="text" style="background-color: white" value="{{wool_supplier_search}}" list="wool_supp" autocomplete="off" class="form-control" name="wool_supplier"
+                                <input type="text" style="background-color: white" value="{{wool_search}}" list="wool_se" autocomplete="off" class="form-control" name="wool"
                                        placeholder="بحث ... بإسم الخامه"
                                 >
                                 <span >
                                     <button class="bx bx-search-alt btn btn-warning" type="submit">
                                     </button>
                                 </span>
-                                <datalist id="wool_supp" >
-                                    {% for supp in wool_suppliers %}
-                                        <option value="{{ supp.name }}">
-                                            {{ supp.name }}
+                                <datalist id="wool_se" >
+                                    {% for wool in wool_object_serach %}
+                                        <option value="{{wool.wool_name}}">
+                                            {{ wool.wool_name }}
                                             </option>
                                     {% endfor %}
                                 </datalist>
@@ -111,80 +112,90 @@
                         {% endif %}
                     </div>
                 </div>
+
                 <div class="row">
-                {% for x in object_list  %}
-                <div class="col-xl-2 col-md-2- col-sm-6">
-                  <div class="card text-center">
-                      <div class="card-body">
-                          <div class="avatar-sm mx-auto mb-4 mt-5">
-                              <span class="avatar-title rounded-circle bg-soft-primary text-primary font-size-16">
-                                <img src="/static/assets/images/vector/Product wool.png" alt="" width="150px">
+                    <div class="col-lg-12">
+                        <div class="">
+                            <div class="table-responsive">
+                                <table class="table project-list-table table-nowrap table-centered table-borderless">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" style="width: 100px">#</th>
+                                            <th scope="col">اسم الخامة</th>
+                                            <th scope="col">الالوان المتاحة</th>
+                                            <th scope="col">عدد الشكاير</th>
+                                            <th scope="col">الوزن الكلي</th>
+                                            <th scope="col">العمليات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for x in object_list %}
+                                        <!-- template tags objects -->
+                                        {% color_total x.id as has_total_wool_item %}
+                                        {% weight_total x.id as has_total_wool_weight %}
+                                        {% avalibale_color x.id as has_avaliable_color %}
+                                        <tr style="background-color: #f6f6f6eb">
+                                            <td><img src="/static/assets/images/vector/Product wool.png" alt="" class="avatar-lg"></td>
+                                            <td>
+                                                <h3><a href="{% url 'Wool:WoolDetails' x.id %}" class="text-dark">{{ x.wool_name }}</a></h3>
+                                                <p class="text-muted mb-0"> النوع: {{ x.get_wool_type_display}}</p>
+                                            </td>
+                                            <td>
+                                            "
+                                            {% if has_avaliable_color %}
+                                                {% for w in has_avaliable_color %} 
+                                                <span
+                                                style="font-weight:bold; font-style:italic"
+                                                >
+                                                {{w.color__color_name }} - 
+                                                </span>
+                                                {% endfor %}
+                                             
+                                            {% else  %} 
+                                                لا يوجد الوان متاحة
+                                            {% endif %} 
+                                            "
+                                                    
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-success">{% if has_total_wool_item %} {{ has_total_wool_item }} {% else %} 00.0 {% endif %}
+                                                </span> شكارة
+                                            </td>
+                                            <td>
+                                                <span class="badge badge-warning">{% if has_total_wool_weight %} {{ has_total_wool_weight }} {% else %} 00.0 {% endif %}
+                                                </span> كيلو جرام
+                                            </td>
+                                            <td>
+                                                <div class="team">
+                                                    <a href="{% url 'Wool:WoolDetails' x.id %}" data-original-title="Message">
+                                                            <span class="badge badge-primary"><i class='bx bx-area' ></i>تفاصيل الخامة</span>
+                                                    </a>
+                                                    
+                                                    {% if request.user.is_superuser %}
+                                                    {% if message == "active"  %}
+                                                    <a href="{% url 'Wool:WoolUpdate' x.id %}" data-toggle="modal" data-target="#action_modal" data-placement="top" title="" data-original-title="Message">
+                                                        <span class="badge  badge-info"><i class='bx bx-edit' ></i>تعديل</span>
+                                                    </a>
 
-                              </span>
-                          </div><br>
-                          <h3>
-
-                            <div class=" d-flex justify-content-center">
-                                <div >
-                                    <h3 class="text-bold"> {{ x.wool_name }}
-                                    </h3>
-                                </div>
-
-                            </div>
-
-                            <div style="margin-top: 5px;">
-                                <div class="contact-links d-flex justify-content-center font-size-20">
-                                    <div >
-                                       <a href="{% url 'Wool:WoolDetails' x.id %}" data-original-title="Message">
-                                           <span class="badge badge-primary"><i class='bx bx-area' ></i>تفاصيل الخامة</span>
-                                      </a>
-                                   </div>
-                                </div>
+                                                    <a href="{% url 'Wool:WoolSuperDelete' x.id %}" data-toggle="modal" data-target="#action_modal" data-placement="top" title="" data-original-title="Profile">
+                                                        <span class="badge  badge-danger"><i class='bx bxs-trash'  ></i>حذف</span>
+                                                    </a>
+                                                    {% endif %}
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                      <div class="card-footer bg-transparent border-top">
-                          <div class="contact-links d-flex justify-content-center font-size-20">
-                            {% if request.user.is_superuser %}
-                            {% if message == "active"  %}
-
-                            <div class="mr-3">
-                                 <a href="{% url 'Wool:WoolUpdate' x.id %}" data-toggle="modal" data-target="#action_modal" data-placement="top" title="" data-original-title="Message">
-                                     <span class="badge  badge-info"><i class='bx bx-edit' ></i>تعديل</span>
-                                </a>
-                             </div>
-    
-                            <div class="">
-                                <a href="{% url 'Wool:WoolSuperDelete' x.id %}" data-toggle="modal" data-target="#action_modal" data-placement="top" title="" data-original-title="Profile">
-                                    <span class="badge  badge-danger"><i class='bx bxs-trash'  ></i>حذف</span>
-                                </a>
-                            </div>
-                        {% else %}
-                             <!-- <div class="mr-3">
-                                    <a href="{% url 'Wool:WoolSupplierRestore' x.id %}" data-toggle="modal" data-target="#action_modal" data-placement="top" title="" data-original-title="Message">
-                                        <span class="badge badge-dark"><i class='bx bx-redo '></i> استرجاع
-                                        </span>
-                                    </a>
-                            </div>
-
-                            <div class="">
-                                <a href="{% url 'Wool:WoolSupplierSuperDelete' x.id %}" data-toggle="modal" data-target="#action_modal" data-placement="top" title="" data-original-title="Profile">
-                                    <span class="badge badge-danger"><i class='bx bxs-trash '   ></i> حذف نهائي </span>
-                                     
-                                </a>
-                            </div> -->
-                        {% endif %}
-                            {% endif %}
-                              
-                            </div>
-                      </div>
-                  </div>
+                    </div>
                 </div>
 
-                {% endfor %}
 
 
-                </div>
-
+               
                 {% if is_paginated %}
                 {% include "components/paginator.html" %}
                 {% endif %}

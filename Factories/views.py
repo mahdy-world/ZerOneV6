@@ -12,6 +12,7 @@ from django.contrib import messages
 import weasyprint
 from django.template.loader import render_to_string
 from datetime import datetime
+from Wool.models import Wool, WoolColor, WoolSupplierQuantity
 
 
 class FactoryList(LoginRequiredMixin, ListView):
@@ -361,10 +362,10 @@ class FactoryOutSide_div(LoginRequiredMixin, DetailView):
         queryset_outside = FactoryOutSide.objects.filter(factory=self.object)
         if queryset_outside:
             context['last_outside_id'] = queryset_outside.last().id
-        wool_val = self.request.GET.get('wool_val')
+        # wool_val = self.request.GET.get('wool_val')
         date_val = self.request.GET.get('date_val')
-        if wool_val:
-            queryset_outside = queryset_outside.filter(wool_type=int(wool_val))
+        # if wool_val:
+        #     queryset_outside = queryset_outside.filter(wool_type=int(wool_val))
         if date_val:
             queryset_outside = queryset_outside.filter(date=date_val)
 
@@ -425,6 +426,7 @@ def FactoryInSideCreate(request):
         date = request.POST.get('date')
         weight = request.POST.get('weight')
         color = request.POST.get('color')
+        color_object = Color.objects.get(id=color)
         wool_type = request.POST.get('wool_type')
         product = request.POST.get('product')
         product_weight = request.POST.get('product_weight')
@@ -443,7 +445,7 @@ def FactoryInSideCreate(request):
                 obj.weight = weight
             else:
                 obj.weight = 0
-            obj.color = color
+            obj.color = color_object
             if wool_type:
                 obj.wool_type = wool_type
             else:
@@ -459,6 +461,7 @@ def FactoryInSideCreate(request):
             obj.save()
 
             if obj:
+                
                 response = {
                     'msg': 1
                 }
@@ -496,27 +499,60 @@ def FactoryOutSideCreate(request):
         factory = Factory.objects.get(id=factory_id)
 
         date = request.POST.get('date')
+        wool_count_item= request.POST.get('wool_count_item')
+        wool= request.POST.get('wool')
         weight = request.POST.get('weight')
-        color = request.POST.get('color')
         wool_type = request.POST.get('wool_type')
         percent_loss = request.POST.get('percent_loss')
         weight_after_loss = request.POST.get('weight_after_loss')
+        color = request.POST.get('color')
+        color_object = Color.objects.get(id=color)
+        wool_object = Wool.objects.get(id=wool)
 
         if factory_id and date and weight and percent_loss and weight_after_loss:
             obj = FactoryOutSide()
             obj.factory = factory
             obj.date = date
             obj.admin = request.user
-            obj.weight = weight
-            obj.color = color
+            obj.color = color_object
+            obj.wool = wool_object
             if wool_type:
                 obj.wool_type = wool_type
             else:
                 obj.wool_type = None
             obj.percent_loss = percent_loss
             obj.weight_after_loss = weight_after_loss
-            obj.save()
-
+            
+             # filter woolcolor object based on data from user 
+            wool_color_object = WoolColor.objects.filter(wool=wool_object, color=color_object)
+            # return just id's for woolcolor object using values_list method
+            wool_color_object_id =  wool_color_object.values_list('id', flat=True)
+            # check if found id's or not 
+            if wool_color_object_id:
+                # convert queryset to list 
+                wool_color_object_id_list = list(wool_color_object_id)
+                # get object using id 
+                color_wool_id = WoolColor.objects.get(id=wool_color_object_id_list[0]) 
+                # check if id not = none and update data for color 
+                if color_wool_id != None:
+                    if float(wool_count_item) <= color_wool_id.count:      
+                        obj.wool_count_item = wool_count_item
+                        obj.weight = weight
+                        obj.weight_after_loss = weight_after_loss
+                    else: 
+                        obj.wool_count_item = color_wool_id.count
+                        obj.weight = color_wool_id.weight
+                        obj.weight_after_loss = color_wool_id.weight
+                    # print(wool_color_object_id)
+                    if  color_wool_id.count >= float(wool_count_item) and color_wool_id.weight >= float(weight):
+                        color_wool_id.count -= float(wool_count_item)
+                        color_wool_id.weight -= float(weight)
+                        color_wool_id.save()
+                        obj.save()
+                    else:
+                        obj.save()
+                        color_wool_id.delete()
+           
             if obj:
                 response = {
                     'msg': 1
@@ -774,6 +810,26 @@ def PrintAll(request, pk):
     pdf = html.write_pdf(stylesheets=[weasyprint.CSS('static/assets/css/invoice_pdf.css')], presentational_hints=True)
     response = HttpResponse(pdf, content_type='application/pdf')
     return response
+
+# filter color based on wool item 
+def FactoryOutSide_color_filter(request):
+    # wool id that returend from wool input 
+    e = request.GET.get('e')
+    # print(e)
+    # get wool object 
+    wool_object = Wool.objects.get(id=int(e))
+    # colors with id, name, color avaliable count, for wool item 
+    wool_color_objects =  WoolColor.objects.filter(wool__id=wool_object.id).values('color__id', 'color__color_name').annotate(wcount=Sum('count'), qcount=Sum('weight'))
+    
+    # convert queryset to list 
+    if wool_color_objects:
+        wool_color_objects_var = list(wool_color_objects)
+    else: 
+        wool_color_objects_var = 0
+    data = json.dumps({
+        'wool_color_objects': wool_color_objects_var,
+    })
+    return HttpResponse(data, content_type='application/json')
 
 
 def get_product_weight_time(request):

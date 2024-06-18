@@ -21,5 +21,6 @@ urlpatterns = [
     path('seller_invoice_search/<int:type>/', views.SellerInvoiceSearch.as_view(), name='SellerInvoiceSearch'),
     path('client_invoice_search/<int:type>/', views.ClientInvoiceSearch.as_view(), name='ClientInvoiceSearch'),
     path('wool_supplier_search/', views.WoolSupplierSearch.as_view(), name='WoolSupplierSearch'),
+    path('wool_search/', views.WoolSearch.as_view(), name='WoolSearch'),
     path('system_statistics/', views.SystemStatistics, name='system_statistics'),
 ]

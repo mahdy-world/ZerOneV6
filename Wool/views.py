@@ -28,6 +28,7 @@ class WoolList(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['message'] = 'active'
         context['count'] = self.model.objects.all().count()
+        context['wool_object_serach'] = self.model.objects.all()
         return context
     
 class WoolCreate(LoginRequiredMixin, CreateView):
@@ -95,7 +96,7 @@ class WoolSuperDelete(LoginRequiredMixin, UpdateView):
 
 def WoolDetails(request, pk):
     wool_object = Wool.objects.get(id=pk)
-    wool_color_objects = WoolSupplierQuantity.objects.filter(wool__id=wool_object.id).values('wool_color__color_name').annotate(wcount=Sum('wool_item_count'), qcount=Sum('wool_weight'))
+    wool_color_objects = WoolColor.objects.filter(wool__id=wool_object.id).values('color__color_name', 'color__color_hex_code').annotate(wcount=Sum('count'), qcount=Sum('weight'))
     quantity = WoolSupplierQuantity.objects.filter(wool=wool_object).order_by('-id')
 
     wool_color_filter = Color.objects.all()
@@ -131,7 +132,34 @@ def AddWoolQuantity(request, pk):
         obj = form.save(commit=False)
         obj.wool = wool_object
         obj.admin = request.user
+        # filter woolcolor object based on data from user 
+        wool_color_object = WoolColor.objects.filter(wool=wool_object, color=form.cleaned_data['wool_color'])
+        # return just id's for woolcolor object using values_list method
+        wool_color_object_id =  wool_color_object.values_list('id', flat=True)
+        # check if found id's or not 
+        if wool_color_object_id:
+            # convert queryset to list 
+            wool_color_object_id_list = list(wool_color_object_id)
+            # get object using id 
+            color_wool_id = WoolColor.objects.get(id=wool_color_object_id_list[0]) 
+            # check if id not = none and update data for color 
+            if color_wool_id != None:
+                print(wool_color_object_id)
+                color_wool_id.count += form.cleaned_data['wool_item_count']
+                color_wool_id.weight += form.cleaned_data['wool_weight']
+                color_wool_id.save()
+        else:
+            wool_color_object = WoolColor()
+            wool_color_object.wool = wool_object
+            wool_color_object.color = form.cleaned_data['wool_color']
+            wool_color_object.count = form.cleaned_data['wool_item_count']
+            wool_color_object.weight = form.cleaned_data['wool_weight']
+            wool_color_object.save()
+        
         obj.save()
+        
+        
+        
         messages.success(request, " تم اضافة كمية جديدة بنجاح ", extra_tags="success")
     else:
         messages.error(request, " حدث خطأ أثناء اضافة الكمية ", extra_tags="danger")
@@ -141,11 +169,28 @@ def AddWoolQuantity(request, pk):
 def DelWoolQuantity(request, pk):
     quant = WoolSupplierQuantity.objects.get(id=pk)
     id = quant.wool.id
+    # filter woolcolor object based on data from user 
+    wool_color_object = WoolColor.objects.filter(wool=quant.wool, color=quant.wool_color)
+    # return just id's for woolcolor object using values_list method
+    wool_color_object_id =  wool_color_object.values_list('id', flat=True)
+    # check if found id's or not 
+    if wool_color_object_id:
+        # convert queryset to list 
+        wool_color_object_id_list = list(wool_color_object_id)
+        # get object using id 
+        color_wool_id = WoolColor.objects.get(id=wool_color_object_id_list[0]) 
+        # check if id not = none and update data for color 
+        if color_wool_id != None:
+            # print(wool_color_object_id)
+            if  color_wool_id.count >= quant.wool_item_count :
+                color_wool_id.count -= quant.wool_item_count
+                color_wool_id.weight -= quant.wool_weight
+                color_wool_id.save()
+            else:
+                color_wool_id.delete()
     quant.delete()
     messages.success(request, " تم حذف كمية بنجاح ", extra_tags="success")
     return redirect('Wool:WoolDetails', pk=id)
-
-
 
 
 class WoolSupplierList(LoginRequiredMixin, ListView):
@@ -328,7 +373,32 @@ def AddWoolSupplierQuantity(request, pk):
         obj = form.save(commit=False)
         obj.supplier = supplier
         obj.admin = request.user
+        # filter woolcolor object based on data from user 
+        wool_color_object = WoolColor.objects.filter(wool=form.cleaned_data['wool'], color=form.cleaned_data['wool_color'])
+        # return just id's for woolcolor object using values_list method
+        wool_color_object_id =  wool_color_object.values_list('id', flat=True)
+        # check if found id's or not 
+        if wool_color_object_id:
+            # convert queryset to list 
+            wool_color_object_id_list = list(wool_color_object_id)
+            # get object using id 
+            color_wool_id = WoolColor.objects.get(id=wool_color_object_id_list[0]) 
+            # check if id not = none and update data for color 
+            if color_wool_id != None:
+                print(wool_color_object_id)
+                color_wool_id.count += form.cleaned_data['wool_item_count']
+                color_wool_id.weight += form.cleaned_data['wool_weight']
+                color_wool_id.save()
+        else:
+            wool_color_object = WoolColor()
+            wool_color_object.wool = form.cleaned_data['wool']
+            wool_color_object.color = form.cleaned_data['wool_color']
+            wool_color_object.count = form.cleaned_data['wool_item_count']
+            wool_color_object.weight = form.cleaned_data['wool_weight']
+            wool_color_object.save()
         obj.save()
+        
+        
         messages.success(request, " تم اضافة كمية جديدة بنجاح ", extra_tags="success")
     else:
         messages.error(request, " حدث خطأ أثناء اضافة الكمية ", extra_tags="danger")
@@ -338,6 +408,22 @@ def AddWoolSupplierQuantity(request, pk):
 def DelWoolSupplierQuantity(request, pk):
     quant = WoolSupplierQuantity.objects.get(id=pk)
     id = quant.supplier.id
+    # filter woolcolor object based on data from user 
+    wool_color_object = WoolColor.objects.filter(wool=quant.wool, color=quant.wool_color)
+    # return just id's for woolcolor object using values_list method
+    wool_color_object_id =  wool_color_object.values_list('id', flat=True)
+    # check if found id's or not 
+    if wool_color_object_id:
+        # convert queryset to list 
+        wool_color_object_id_list = list(wool_color_object_id)
+        # get object using id 
+        color_wool_id = WoolColor.objects.get(id=wool_color_object_id_list[0]) 
+        # check if id not = none and update data for color 
+        if color_wool_id != None:
+            print(wool_color_object_id)
+            color_wool_id.count -= quant.wool_item_count
+            color_wool_id.weight -= quant.wool_weight
+            color_wool_id.save()
     quant.delete()
     messages.success(request, " تم حذف كمية بنجاح ", extra_tags="success")
     return redirect('Wool:WoolSupplierQuantity', pk=id)

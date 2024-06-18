@@ -13,6 +13,7 @@ urlpatterns = [
     path('superDelete/<int:pk>', FactorySuperDelete.as_view(), name="FactorySuperDelete"),
     path('all/print/<int:pk>/', PrintAll, name="PrintAll"),
     path('get_product_weight_time/', get_product_weight_time, name="get_product_weight_time"),
+    path('FactoryOutSide_color_filter/', FactoryOutSide_color_filter, name="FactoryOutSide_color_filter"),
 
     path('detail/payment/<int:pk>/div/', FactoryPayment_div.as_view(), name="FactoryPayment_div"),
     path('payment/create/', FactoryPaymentCreate, name="FactoryPaymentCreate"),

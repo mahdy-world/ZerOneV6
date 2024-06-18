@@ -184,8 +184,15 @@
                                                                     {{forloop.counter}}
                                                                 </td>
                                                                 <td>
-                                                                    <span class="badge badge-pill "  style="background-color: {{x.wool_color.color_hex_code}}"></span>
-                                                                    {{x.wool_color__color_name}}
+                                                                    <span class="badge badge-pill" 
+                                                                    {%  if x.color__color_hex_code == '#FFFFFF' %} 
+                                                                    style="background-color: {{x.color__color_hex_code}}; color: black"
+                                                                    {% else %}
+                                                                    style="background-color: {{x.color__color_hex_code}};"
+                                                                    {% endif %}>
+                                                                    
+                                                                    </span>
+                                                                    {{x.color__color_name}}
                                                                 </td>
 
                                                                 </td>
@@ -216,10 +223,8 @@
                                 <div class="tab-pane " id="inside_wool" role="tabpanel">
                                     <div class="row">
                                         <div class="col-lg-12">
-                
                                              <div class="card">
                                                 <div class="card-body">
-                    
                                                     <div class="tab-pane" id="processing" role="tabpanel">
                                                             <div class="row">
                                                                 <div class="col-lg-12">
@@ -251,8 +256,7 @@
                                                                         {% endif %}
                     
                                                                         <div class="card-body">
-
-                                                                                                <!-- filter -->
+                                                                            <!-- filter -->
                                                                             <div class="row">
                                                                                 <div class="col-md-2">
                                                                                     <div class="form-group sel" >

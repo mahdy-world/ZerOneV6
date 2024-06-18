@@ -14,7 +14,7 @@ from Core.models import SystemInformation
 from Products.models import *
 from Factories.models import Factory, Supplier
 from Treasury.models import Treasury, TreasuryOperation
-from Wool.models import WoolSupplier
+from Wool.models import Wool, WoolSupplier
 from Workers.models import Worker
 from Invoices.models import Invoice, InvoiceItem
 from Core.models import *
@@ -444,10 +444,28 @@ class WoolSupplierSearch(LoginRequiredMixin, ListView):
     def get_queryset(self):
         search = self.request.GET.get("wool_supplier")
         queryset = self.model.objects.filter(name=search, deleted=False)
+        
+        return queryset
+    
+class WoolSearch(LoginRequiredMixin, ListView):
+    login_url = '/auth/login/'
+    model = Wool
+    template_name = 'Wool/wool_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['message'] = 'active'
+        context['wool_search'] = self.request.GET.get("wool")
+        context['count'] = Wool.objects.all().count()
+        return context
+
+    def get_queryset(self):
+        search = self.request.GET.get("wool")
+        queryset = self.model.objects.filter(wool_name=search)
         if queryset:
             queryset = queryset
         else:
-            queryset = self.model.objects.filter(deleted=False)
+            queryset = Wool.objects.all()
         return queryset
 
 
