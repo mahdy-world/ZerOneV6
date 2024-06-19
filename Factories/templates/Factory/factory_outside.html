@@ -292,12 +292,13 @@
                                                             let color_name = nestedData.color__color_name;  // Access the 'name' property
                                                             let color_id = nestedData.color__id;
                                                             let color_cont_item = nestedData.wcount;
+                                                            let color_weight_item = nestedData.qcount;
 
                                                             let optionElement = document.createElement('option');
                                                             
                                                             // Set the option value and text
                                                             optionElement.value = color_id;
-                                                            optionElement.textContent = color_name +  '/' + ' ' + color_cont_item + 'شكارة';
+                                                            optionElement.textContent = color_name +  '/' + ' ' + color_cont_item + 'ش' +  '/' + ' ' + color_weight_item + 'ك';
                                                             // Append the option to the select element
                                                             selectElement.appendChild(optionElement);
                                                         }

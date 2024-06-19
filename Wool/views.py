@@ -182,7 +182,7 @@ def DelWoolQuantity(request, pk):
         # check if id not = none and update data for color 
         if color_wool_id != None:
             # print(wool_color_object_id)
-            if  color_wool_id.count >= quant.wool_item_count :
+            if  color_wool_id.count >= quant.wool_item_count:
                 color_wool_id.count -= quant.wool_item_count
                 color_wool_id.weight -= quant.wool_weight
                 color_wool_id.save()
@@ -420,10 +420,13 @@ def DelWoolSupplierQuantity(request, pk):
         color_wool_id = WoolColor.objects.get(id=wool_color_object_id_list[0]) 
         # check if id not = none and update data for color 
         if color_wool_id != None:
-            print(wool_color_object_id)
-            color_wool_id.count -= quant.wool_item_count
-            color_wool_id.weight -= quant.wool_weight
-            color_wool_id.save()
+            # print(wool_color_object_id)
+            if  color_wool_id.count >= quant.wool_item_count:
+                color_wool_id.count -= quant.wool_item_count
+                color_wool_id.weight -= quant.wool_weight
+                color_wool_id.save()
+            else:
+                color_wool_id.delete()
     quant.delete()
     messages.success(request, " تم حذف كمية بنجاح ", extra_tags="success")
     return redirect('Wool:WoolSupplierQuantity', pk=id)

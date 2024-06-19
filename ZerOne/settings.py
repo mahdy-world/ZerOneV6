@@ -140,7 +140,7 @@ BASE_DIR / "static",
     '/var/www/static/',
 ]
 
-MEDIA_URL = '/media/'
+MEDIA_URL = 'http://127.0.0.1:8000/media/'
 MEDIA_ROOT = (
     os.path.join(BASE_DIR, 'media')
 )

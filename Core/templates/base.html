@@ -1133,7 +1133,7 @@
                                 <div class="card" style="background: #fefefa;">
                                     <div class="card-header">
                                         <div class="card-title">
-                                            <b class="font-weight-bold text-center">اقسام الخيط</b>
+                                            <b class="font-weight-bold text-center">اقسام تجار الخامات</b>
                                             <span class="card-tools" style="float: left">
                                             <!--<button type="button" class="btn btn-tool" data-card-widget="maximize" onclick="
                                                     if (document.getElementById('expand_modal').value === '0'){
@@ -1201,6 +1201,83 @@
                                                         </div>
                                                         <div class="contentBx">
                                                             <h2>سلة المهملات </h2>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade"  data-backdrop="static" id="wool_modal">
+                <div class="modal-dialog modal-xl" style="background: #fefefa;">
+                    <div class="modal-content" style="background: #fefefa;">
+                        <div class="row">
+                            <div class="col-lg-12" >
+                                <div class="card" style="background: #fefefa;">
+                                    <div class="card-header">
+                                        <div class="card-title">
+                                            <b class="font-weight-bold text-center">اقسام الخامات</b>
+                                            <span class="card-tools" style="float: left">
+                                            <!--<button type="button" class="btn btn-tool" data-card-widget="maximize" onclick="
+                                                    if (document.getElementById('expand_modal').value === '0'){
+                                                        document.getElementById('expand_modal').value = 1;
+                                                        document.getElementById('action_modal2').className = 'modal-dialog expand_modal';
+                                                        document.getElementById('sub_modal2').className = 'modal-dialog modal-lg expand_modal';
+                                                    }
+                                                    else {
+                                                        document.getElementById('expand_modal').value = 0;
+                                                        document.getElementById('action_modal2').className = 'modal-dialog';
+                                                        document.getElementById('sub_modal2').className = 'modal-dialog modal-lg';
+                                                    }
+
+                                                    ">
+                                                <input type="number" value="0" id="expand_modal" hidden />
+                                                <i class="fas fa-expand"></i>
+                                            </button>-->
+                                            <button type="button" class="btn btn-tool" data-dismiss="modal">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </span>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="card-body" style="background: #fefefa;">
+                                        <div class="row">
+                                            <div class="col-xl-6 col-lg-6 col-md-6">
+                                                <a href="{% url 'Wool:WoolList' %}">
+                                                    <div class="container_new">
+                                                        <div class="card">
+                                                        <div class="imgBx">
+                                                            <img class="image" src="/static/assets/images/vector/list.png">
+                                                        </div>
+                                                        <div class="contentBx">
+                                                            <h2>قائمة الخامات</h2>
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+
+
+                                            <div class="col-xl-6 col-lg-6 col-md-6">
+                                                <a  href="{% url 'Wool:WoolCreate'  %}" data-target="#sub_modal" data-toggle="modal">
+                                                    <div class="container_new">
+                                                        <div class="card">
+                                                        <div class="imgBx">
+                                                            <img class="image" src="/static/assets/images/vector/add.png">
+                                                        </div>
+                                                        <div class="contentBx">
+                                                            <h2>اضافة خامة جديدة</h2>
                                                         </div>
                                                         </div>
                                                     </div>

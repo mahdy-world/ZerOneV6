@@ -685,15 +685,18 @@ def PrintOutside(request, pk):
 
     if queryset:
         sum_all_weight = queryset.aggregate(all=Sum('weight')).get('all')
+        sum_all_wool_items = queryset.aggregate(all_item=Sum('wool_count_item')).get('all_item')
         sum_weight = queryset.aggregate(out=Sum('weight_after_loss')).get('out')
     else:
         sum_all_weight = 0
         sum_weight = 0
+        sum_all_wool_items = 0
 
     context = {
         'queryset': queryset,
         'sum_all_weight': sum_all_weight,
         'sum_weight': sum_weight,
+        'sum_all_wool_items': sum_all_wool_items,
         'system_info': system_info,
         'date': datetime.now(),
         'user': request.user.username,
