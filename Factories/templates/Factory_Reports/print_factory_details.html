@@ -81,19 +81,23 @@
             <th>اجمالي المسحوبات</th>
         </tr>
         <tr>
+            <th>{{ sum_returned_total|floatformat:2 }} جنيه</th>
+            <th>اجمالي المرتجع</th>
+        </tr>
+        <tr>
             <th>
-            {% if sum_in_total|sub:sum_out_total > 0 %}
-                {{ sum_in_total|sub:sum_out_total|floatformat:2 }} جنيه
-            {% elif sum_in_total|sub:sum_out_total < 0  %}
-                {{ sum_in_total|sub:sum_out_total|mul:-1|floatformat:2 }} جنيه
+            {% if sum_in_total|sub:sum_out_total|sub:sum_returned_total > 0 %}
+                {{ sum_in_total|sub:sum_out_total|sub:sum_returned_total|floatformat:2 }} جنيه
+            {% elif sum_in_total|sub:sum_out_total|sub:sum_returned_total < 0  %}
+                {{ sum_in_total|sub:sum_out_total|mul:-1|sub:sum_returned_total|floatformat:2 }} جنيه
             {% else %}
                 0.00 جنيه
             {% endif %}
             </th>
             <th>الباقي
-            {% if sum_in_total|sub:sum_out_total > 0 %}
+            {% if sum_in_total|sub:sum_out_total|sub:sum_returned_total > 0 %}
                 للمصنع
-            {% elif sum_in_total|sub:sum_out_total < 0  %}
+            {% elif sum_in_total|sub:sum_out_total|sub:sum_returned_total < 0  %}
                 علي المصنع
             {% endif %}
             </th>

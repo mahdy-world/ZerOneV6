@@ -15,8 +15,7 @@
                                                 <form >
 
                                                 <tr>
-
-                                                    <th class="col-lg-2 col-xl-2 col-md-2">{{form_inside.date|as_crispy_field}}</th>
+                                                    <th class="col-lg-1 col-xl-2 col-md-2">{{form_inside.date|as_crispy_field}}</th>
                                                     <th class="col-lg-2 col-xl-2 col-md-2">{{form_inside.weight|as_crispy_field}}</th>
                                                     <th class="col-lg-2 col-xl-2 col-md-2">{{form_inside.color|as_crispy_field}}</th>
                                                     <th class="col-lg-2 col-xl-2 col-md-2">{{form_inside.wool_type|as_crispy_field}}</th>
@@ -558,6 +557,7 @@
                                                             alert("تم الاضافة بنجاح");
                                                             $('#outside').html('&nbsp;').load("{% url 'Factories:FactoryOutSide_div' object.id %}");
                                                             $("#paymnet").html("&nbsp;").load("{% url 'Factories:FactoryPayment_div' object.id %}");
+                                                            $("#returned").html("&nbsp;").load("{% url 'Factories:FactoryReturned_div' object.id %}");
                                                         }else{
                                                             alert("حاول مرة اخري / خطأ في البيانات");
                                                         }
@@ -587,6 +587,7 @@
                                                     alert("تم الحذف بنجاح");
                                                     $('#outside').html('&nbsp;').load("{% url 'Factories:FactoryOutSide_div' object.id %}");
                                                     $("#paymnet").html("&nbsp;").load("{% url 'Factories:FactoryPayment_div' object.id %}");
+                                                    $("#returned").html("&nbsp;").load("{% url 'Factories:FactoryReturned_div' object.id %}");
                                                  },
 
                                                 failure: function() {

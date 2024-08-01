@@ -261,6 +261,7 @@ $("#paymnet").html("&nbsp;").load("{% url 'Factories:FactoryPayment_div' object.
 alert("تم الاضافة بنجاح");
 $( '#inside' ).html( '&nbsp;' ).load( "{% url 'Factories:FactoryInSide_div' object.id %}");
 $('#outside').html('&nbsp;').load("{% url 'Factories:FactoryOutSide_div' object.id %}");
+$('#returned').html('&nbsp;').load("{% url 'Factories:FactoryReturned_div' object.id %}");
 
 } else {
 alert("حاول مرة اخري / خطأ في البيانات");
@@ -290,6 +291,7 @@ $("#paymnet")
 alert("تم الحذف بنجاح");
 $( '#inside' ).html( '&nbsp;' ).load( "{% url 'Factories:FactoryInSide_div' object.id %}");
 $('#outside').html('&nbsp;').load("{% url 'Factories:FactoryOutSide_div' object.id %}");
+$('#returned').html('&nbsp;').load("{% url 'Factories:FactoryReturned_div' object.id %}");
 },
 
 failure: function () {},

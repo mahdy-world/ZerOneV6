@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime
 from Auth.models import User
+from Core.models import Color
 
 # Create your models here.
 # class Color(models.Model):
@@ -88,3 +89,4 @@ class SellerPayments(models.Model):
 
     def __str__(self):
         return self.seller
+    

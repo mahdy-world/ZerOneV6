@@ -3,7 +3,6 @@ from Wool.models import Wool
 from django.db import models
 from Auth.models import User
 from Core.models import Color
-
 from Products.models import Product
 
 # Create your models here.
@@ -29,6 +28,21 @@ class Payment(models.Model):
     recipient = models.CharField(max_length=50, null=True, blank=True, verbose_name="المستلم")
     admin = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name="المسئول")
     date = models.DateField(null=True, verbose_name="التاريخ", default=date.today)
+    
+    def __str__(self):
+        return self.factory.name
+    
+    
+class FactoryReturned(models.Model):
+    created = models.DateTimeField(auto_now_add=True, verbose_name="تاريخ الاضافة")
+    item_count = models.FloatField(verbose_name="العدد")
+    factory = models.ForeignKey(Factory, on_delete=models.CASCADE, verbose_name="المصنع")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="الموديل")
+    item_price = models.FloatField(verbose_name="سعر القطعة")
+    total_price = models.FloatField(verbose_name="اجمالي السعر")
+    admin = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name="المسئول")
+    date = models.DateField(null=True, verbose_name="التاريخ", default=date.today)
+    returned_details = models.TextField(null=True, blank=True, verbose_name='التفاصيل')
     
     def __str__(self):
         return self.factory.name
@@ -133,3 +147,15 @@ class SupplierPayment(models.Model):
 
     def __str__(self):
         return self.supplier.name   
+    
+
+class ProductQuantityInside(models.Model):
+    date = models.DateField(null=True, verbose_name="التاريخ", default=date.today)
+    product_item = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, verbose_name="الموديل")
+    factory_item = models.ForeignKey(Factory, on_delete=models.SET_NULL, null=True, verbose_name='المصنع')
+    product_count = models.IntegerField(null=True, blank=True, verbose_name='الكمية')
+    product_color = models.ForeignKey(Color, on_delete=models.SET_NULL, null=True, verbose_name='اللون')
+    created_user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name='المستخدم')
+    
+    def __str__(self):
+        return self.product_item.name

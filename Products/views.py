@@ -13,6 +13,7 @@ from django.template.loader import render_to_string
 from Invoices.models import *
 from Factories.models import *
 from django.db.models import F
+from Factories.forms import ProductQuantityInsideForm
 
 # Create your views here.
 
@@ -235,11 +236,14 @@ class ProductDetails(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         product = Product.objects.get(id=int(self.kwargs['pk']))
         context = super().get_context_data(**kwargs)
+        context['action_url'] = reverse_lazy('Factories:ProductQuantityInsideCreate', kwargs={'pk': product.id})
+        context['ProductQuantityInsideForm'] = ProductQuantityInsideForm
         context['title'] = 'إنتاج ومبيعات الموديل: ' + str(product.name)
         context['type'] = 'list'
-        context['factory_in'] = FactoryInSide.objects.filter(product=product).order_by('-date', '-id')
-        context['factory_in_sum'] = FactoryInSide.objects.filter(product=product).order_by('-date', '-id').aggregate(sum=Sum('product_count')).get('sum')
+        context['factory_in'] = ProductQuantityInside.objects.filter(product_item=product).order_by('-date', '-id')
+        context['factory_in_sum'] = ProductQuantityInside.objects.filter(product_item=product).order_by('-date', '-id').aggregate(sum=Sum('product_count')).get('sum')
 
+        context['factory_object'] = Factory.objects.all()
         context['invoices'] = InvoiceItem.objects.filter(item=product, invoice__invoice_type__in=[1, 3], invoice__saved=True).order_by('-date', '-id')
         context['invoices_sum'] = InvoiceItem.objects.filter(item=product, invoice__invoice_type__in=[1, 3], invoice__saved=True).order_by('-date', '-id').aggregate(sum=Sum(F('quantity') * F('unit'))).get('sum')
         context['r_invoices'] = InvoiceItem.objects.filter(item=product, invoice__invoice_type=2, invoice__saved=True).order_by('-date', '-id')
@@ -279,8 +283,18 @@ class ProductDetails(LoginRequiredMixin, ListView):
             product_quantity = product.quantity
         else:
             product_quantity = 0
-
-        context['total'] = context['factory_in_sum'] + product_quantity - (context['invoices_sum'] - context['r_invoices_sum']) - (context['importer_sum'] - context['supplier_sum'])
+            
+        system_info = SystemInformation.objects.all()
+        if system_info.count() > 0:
+            system_info = system_info.last()
+        else:
+            system_info = None
+            
+        context['system_info'] = system_info
+        context['date'] = datetime.now()
+        context['user'] = self.request.user
+        
+        context['total'] =  context['factory_in_sum'] + product_quantity - (context['invoices_sum'] - context['r_invoices_sum']) - (context['importer_sum'] - context['supplier_sum'])
 
         context['product'] = product
         return context

@@ -124,3 +124,4 @@ class ProductSellerPaymentForm(forms.ModelForm):
             'paid_value': forms.NumberInput(attrs={'class': 'form-control', 'min':1}),
             'paid_reason': forms.TextInput(attrs={'class': 'form-control', 'id': 'paid_reason'}),
         }
+        

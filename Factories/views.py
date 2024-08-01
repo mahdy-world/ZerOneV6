@@ -23,6 +23,7 @@ class FactoryList(LoginRequiredMixin, ListView):
     
     def get_queryset(self):
         qureyset = self.model.objects.filter(deleted=False).order_by('-id')
+        print(self.model.objects.filter(id=3))
         return qureyset
     
     def get_context_data(self, **kwargs):
@@ -132,6 +133,19 @@ class FactoryDetails(LoginRequiredMixin, DetailView):
         else:
             context['hours_count'] = 0
             context['minutes_count'] = 0
+            
+        # factory returned
+        queryset_returned = FactoryReturned.objects.filter(factory=self.object)
+        returned_sum_total = queryset_returned.aggregate(price=Sum('total_price')).get('price')
+        if returned_sum_total:
+            returned_sum_total = returned_sum_total
+        else:
+            returned_sum_total = 0
+        context['queryset_returned'] = queryset_returned.order_by('-date', '-id')
+        context['returned_sum_total'] = returned_sum_total
+        total_of_payment = total_account - payment_sum
+        context['returned_account_total'] = total_of_payment - returned_sum_total
+        context['returned_form'] = RefundForm(self.request.POST or None)
 
         # reports
         context['form'] = FactoryPaymentReportForm()
@@ -142,6 +156,9 @@ class FactoryDetails(LoginRequiredMixin, DetailView):
             context['last_outside_id'] = queryset_outside.last().id
         if queryset_inside:
             context['last_inside_id'] = queryset_inside.last().id
+        if queryset_returned:
+            context['last_returned_id'] = queryset_returned.last().id
+            
         return context
 
 
@@ -417,6 +434,47 @@ class FactoryPayment_div(LoginRequiredMixin, DetailView):
         context['type'] = 'list'
         context['factory'] = self.object
         return context
+    
+    
+class FactoryReturned_div(LoginRequiredMixin, DetailView):
+    login_url = '/auth/login/'
+    model = Factory
+    template_name = 'Factory/returned_div.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        queryset_returned = FactoryReturned.objects.filter(factory=self.object)
+        if queryset_returned:
+            context['last_returned_id'] = queryset_returned.last().id
+        date_val = self.request.GET.get('date_val')
+        if date_val:
+            queryset_returned = queryset_returned.filter(date=date_val)
+            
+        returned_sum_total = queryset_returned.aggregate(price=Sum('total_price')).get('price')
+        queryset_payment = Payment.objects.filter(factory=self.object)
+        payment_sum = queryset_payment.aggregate(price=Sum('price')).get('price')
+        total_account =FactoryInSide.objects.filter(factory=self.object).aggregate(total=Sum('total_account')).get('total')
+        factory_total = total_account - payment_sum
+        factory_total_after_returned = factory_total - returned_sum_total
+       
+        if returned_sum_total:
+            returned_sum_total = returned_sum_total
+        else:
+            returned_sum_total = 0
+            
+        if total_account:
+            total_account = total_account
+        else:
+            total_account = 0
+
+        context['queryset_returned'] = queryset_returned.order_by('-date', '-id')
+        context['returned_sum_total'] = returned_sum_total
+        context['total_account'] = total_account
+        context['factory_total'] = factory_total
+        context['returned_account_total'] = factory_total_after_returned
+        context['type'] = 'list'
+        context['factory'] = self.object
+        return context
 
 
 def FactoryInSideCreate(request):
@@ -466,6 +524,7 @@ def FactoryInSideCreate(request):
                     'msg': 1
                 }
 
+            # To add quantity from inside to product
             # prod = obj.product
             # if prod.quantity:
             #     prod.quantity += int(obj.product_count)
@@ -484,6 +543,19 @@ def FactoryInsideDelete(request):
     if request.is_ajax():
         inside_id = request.POST.get('inside_id')
         obj = FactoryInSide.objects.get(id=inside_id)
+        obj.delete()
+
+        response = {
+            'msg': 'Send Successfully'
+        }
+
+        return JsonResponse(response)
+    
+    
+def ReturnedDelete(request):
+    if request.is_ajax():
+        returned_id = request.POST.get('returned_id')
+        obj = FactoryReturned.objects.get(id=returned_id)
         obj.delete()
 
         response = {
@@ -594,6 +666,42 @@ def FactoryPaymentCreate(request):
             obj.admin = request.user
             obj.recipient = recipient
             obj.price = price
+            obj.save()
+            
+            if obj:
+                response = {
+                    'msg' : 1
+                }
+        else:
+            response = {
+                'msg' : 0
+            }
+        return JsonResponse(response)
+    
+    
+def FactoryReturnedCreate(request):
+    if request.is_ajax():
+        factory_id = request.POST.get('id')
+        factory = Factory.objects.get(id=factory_id)
+        
+        date = request.POST.get('date')
+        product = request.POST.get('returned_product')
+        item_price = request.POST.get('item_price')
+        total_price = request.POST.get('total_price')
+        returned_details = request.POST.get('returned_details')
+        item_count = request.POST.get('item_count')
+
+        
+        if factory and date and product and item_price and total_price:
+            obj = FactoryReturned()
+            obj.factory = factory
+            obj.date = date
+            obj.admin = request.user
+            obj.product = Product.objects.get(id=product)
+            obj.item_price = item_price
+            obj.total_price = total_price
+            obj.returned_details = returned_details
+            obj.item_count = item_count
             obj.save()
             
             if obj:
@@ -747,6 +855,54 @@ def PrintPayment(request,pk):
     return response
 
 
+def PrintReturned(request,pk):
+    factory = Factory.objects.get(id=pk)
+    system_info = SystemInformation.objects.all()
+    if system_info.count() > 0:
+        system_info = system_info.last()
+    else:
+        system_info = None
+            
+    queryset = FactoryReturned.objects.filter(factory=pk).order_by('-date', '-id')
+    if request.GET.get('from_date'):
+        queryset = queryset.filter(date__gte=request.GET.get('from_date'))
+    if request.GET.get('to_date'):
+        queryset = queryset.filter(date__lte=request.GET.get('to_date'))
+
+    if queryset:
+        item_count = queryset.aggregate(item=Sum('item_count')).get('item')
+    else:
+        item_count = 0
+        
+    if queryset:
+        count_returned = queryset.aggregate(price=Sum('total_price')).get('price')
+    else:
+        count_returned = 0
+        
+    if queryset:
+        price_item = queryset.aggregate(price=Sum('item_price')).get('price')
+    else:
+        price_item = 0
+
+    context = {
+        'queryset':queryset,
+        'count_returned': count_returned,
+        'item_count': item_count,
+        'price_item': price_item,
+        'system_info': system_info,
+        'date': datetime.now(),
+        'user': request.user.username,
+        'from_date': request.GET.get('from_date'),
+        'to_date': request.GET.get('to_date'),
+        'factory':factory,
+    }
+    html_string = render_to_string('Factory_Reports/print_returned.html', context)
+    html = weasyprint.HTML(string=html_string, base_url=request.build_absolute_uri())
+    pdf = html.write_pdf(stylesheets=[weasyprint.CSS('static/assets/css/invoice_pdf.css')], presentational_hints=True)
+    response = HttpResponse(pdf, content_type='application/pdf')
+    return response
+
+
 def PrintAll(request, pk):
     factory = Factory.objects.get(id=pk)
     system_info = SystemInformation.objects.all()
@@ -756,9 +912,15 @@ def PrintAll(request, pk):
         system_info = None
 
     inside = FactoryInSide.objects.filter(factory=pk)
+    returned = FactoryReturned.objects.filter(factory=pk)
+    if returned:
+        sum_returned_total = returned.aggregate(returned=Sum('total_price')).get('returned')
+    else:
+        sum_returned_total = 0
     if inside:
         sum_in_weight = inside.aggregate(weight=Sum('weight')).get('weight')
         sum_in_total = inside.aggregate(total=Sum('total_account')).get('total')
+        # sum_in_total = sum_in_total - sum_returned_total
         sum_product_count = inside.aggregate(count=Sum('product_count')).get('count')
         sum_hours = inside.aggregate(hour=Sum('hour_count')).get('hour')
         count_models = inside.aggregate(models=Count('product', distinct=True)).get('models')
@@ -793,10 +955,13 @@ def PrintAll(request, pk):
         sum_out_total = payment.aggregate(price=Sum('price')).get('price')
     else:
         sum_out_total = 0
+        
+
 
     context = {
         'sum_in_weight': sum_in_weight,
         'sum_in_total': sum_in_total,
+        'sum_returned_total': sum_returned_total,
         'sum_product_count': sum_product_count,
         'sum_hours': sum_hours,
         'sum_minutes': sum_minutes,
@@ -1197,3 +1362,67 @@ def PrintSupplierAll(request, pk):
     pdf = html.write_pdf(stylesheets=[weasyprint.CSS('static/assets/css/invoice_pdf.css')], presentational_hints=True)
     response = HttpResponse(pdf, content_type='application/pdf')
     return response
+
+
+class ProductQuantityInsideCreate(LoginRequiredMixin ,UpdateView):
+    login_url = '/auth/login/'
+    model = Product
+    form_class = ProductQuantityInsideForm
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'اضافة كمية للمنتج: ' + str(self.object)
+        context['message'] = 'add'
+        context['action_url'] = reverse_lazy('Products:ProductQuantityInsideCreate', kwargs={'pk': self.kwargs['pk']})
+        return context
+
+    def form_valid(self, form):
+        myform = Product.objects.get(id=self.kwargs['pk'])
+        myform.quantity += int(form.cleaned_data.get("product_count"))
+        myform.save()
+        
+        obj = ProductQuantityInside()
+        obj.date = form.cleaned_data.get("date")
+        obj.product_item = myform
+        obj.factory_item = form.cleaned_data.get("factory_item")
+        obj.product_count = form.cleaned_data.get("product_count")
+        obj.product_color = form.cleaned_data.get("product_color")
+        obj.created_user = self.request.user
+        obj.save()
+        return redirect(self.get_success_url())
+
+    def get_success_url(self):
+        messages.success(self.request,  "تم اضافة كمية للمنتج " + str(Product.objects.get(id=self.kwargs['pk']).name) + " بنجاح ", extra_tags="success")
+        if self.request.POST.get('url'):
+            return self.request.POST.get('url')
+        else:
+            return self.success_url
+        
+        
+def ProductQuantityInsideCreate(request, pk):
+    product = Product.objects.get(id=pk)
+    form = ProductQuantityInsideForm(request.POST or None)    
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.product_item = product
+        obj.date = form.cleaned_data.get("date")
+        obj.factory_item = form.cleaned_data.get("factory_item")
+        obj.product_count = form.cleaned_data.get("product_count")
+        obj.product_color = form.cleaned_data.get("product_color")
+        obj.created_user = request.user
+        obj.save()
+        product.quantity = form.cleaned_data.get("product_count")
+        product.save()
+        messages.success(request, " تم اضافة كمية جديدة بنجاح ", extra_tags="success")
+    else:
+        messages.error(request, " حدث خطأ أثناء اضافة الكمية ", extra_tags="danger")
+    return redirect('Products:ProductDetails', pk=product.id)        
+
+
+def DelProductQuantity(request, pk):
+    qn = ProductQuantityInside.objects.get(id=pk)
+    product_id = qn.product_item.id
+    qn.delete()
+    messages.success(request, " تم حذف الكمية بنجاح ", extra_tags="success")
+    return redirect('Products:ProductDetails', pk=product_id)

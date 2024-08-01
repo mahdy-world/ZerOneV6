@@ -36,6 +36,22 @@ class FactoryPaymentForm(forms.ModelForm):
             'recipient' : forms.TextInput(attrs={'class':'form-control',  'placeholder':'المستلم...', 'id':'recipient'}),
         }
         
+# factory returned form 
+class RefundForm(forms.ModelForm):
+    class Meta:
+        fields = ['date', 'item_count', 'admin', 'product', 'item_price', 'total_price', 'returned_details']
+        model = FactoryReturned
+        widgets = {
+            'date' : forms.TextInput(attrs={'type':'date', 'class':'form-control',  'placeholder':'تاريخ السحب...', 'id':'date'}),
+            'item_count' : forms.NumberInput(attrs={ 'class':'form-control', 'placeholder':'عدد القطع...', 'id':'item_count'}),
+            'admin' : forms.Select(attrs={'class':'form-control',  'placeholder':'المسئول...', 'id':'admin'}),
+            'returned_details' : forms.TextInput(attrs={'class':'form-control',  'placeholder':'التفاصيل...', 'id':'returned_details'}),
+            'product' : forms.Select(attrs={'class':'form-control',  'placeholder':'الموديل...', 'id':'returned_product'}),
+            'item_price' : forms.NumberInput(attrs={ 'class':'form-control', 'placeholder':'سعر القطعة...', 'id':'item_price'}),
+            'total_price' : forms.NumberInput(attrs={ 'class':'form-control', 'placeholder':'اجمالي السعر...', 'id':'total_price'}),
+
+        }
+        
 class FactoryPaymentReportForm(forms.Form):
     from_date = forms.DateField(required=False, widget=forms.DateInput(attrs={
         'type':'date',
@@ -137,4 +153,15 @@ class SupplierPaymentForm(forms.ModelForm):
             'date': forms.DateInput(attrs={'class': 'form-control', 'id': 'date', 'type':'date'}),
             'value': forms.NumberInput(attrs={'class': 'form-control', 'min': '1', 'id': 'value'}),
             'reason': forms.TextInput(attrs={'class': 'form-control', 'id': 'reason'}),
+        }
+
+class ProductQuantityInsideForm(forms.ModelForm):
+    class Meta:
+        model = ProductQuantityInside
+        fields = ['date', 'factory_item', 'product_count', 'product_color']
+        widgets = {
+            'date' : forms.TextInput(attrs={'type':'date', 'class':'form-control',  'placeholder':'التاريخ...', 'id':'date'}),
+            'factory_item': forms.Select(attrs={'class':'form-control', 'id':'factory_item'}),
+            'product_count': forms.NumberInput(attrs={'class':'form-control', 'min': '1', 'id': 'product_count'}),
+            'product_color': forms.Select(attrs={'class':'form-control', 'id': 'product_color'}),
         }
