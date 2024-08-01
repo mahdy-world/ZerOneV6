@@ -110,7 +110,7 @@ class="table pag table-centered table-dark table-nowrap text-center"
 <td><i class="fas fa-user-tie"></i> {{x.admin}}</td>
 {% if request.user.is_superuser %}
 <td>
-{% if x.id == last_payment_id %}
+
 <!--
 {#                            <a#}
 {#                              href="{% url 'Factories:FactoryPaymentUpdate' x.id %}"#}
@@ -131,7 +131,6 @@ class="table pag table-centered table-dark table-nowrap text-center"
   class="text-danger"
   ><i class="mdi mdi-close font-size-18"></i
 ></a>
-{% endif %}
 </td>
 {% endif %}
 

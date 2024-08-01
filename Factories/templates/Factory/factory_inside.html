@@ -135,7 +135,7 @@
                                                         <td><i class="fas fa-user-tie"></i> {{w.admin}} </td>
                                                        {% if request.user.is_superuser %}
                                                        <td>
-                                                       {% if w.id == last_inside_id %}
+                                                       
                                                        <!--
 {#                                                        <a href="{% url 'Factories:FactoryInSideUpdate' w.id %}" class="mr-3 text-warning" data-toggle="modal" data-target="#action_modal" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>#}-->
                                                         <a onclick="
@@ -144,7 +144,7 @@
                                                                     InsideDelete('{{w.id}}')
                                                                 }
                                                                 " style="cursor: pointer;" class="text-danger" ><i class="mdi mdi-close font-size-18"></i></a>
-                                                       {% endif %}
+                                                       
                                                        </td>
                                                        {% endif %}
 

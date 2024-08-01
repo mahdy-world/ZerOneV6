@@ -39,7 +39,6 @@
             <td><i class="fas fa-user-tie"></i> {{x.admin}}</td>
             {% if request.user.is_superuser %}
             <td>
-            {% if x.id == last_outside_id %}
                 <!--
 {#                                                            <a href="{% url 'Factories:FactoryOutSideUpdate' x.id %}" class="mr-3 text-warning" data-toggle="modal" data-target="#action_modal" data-original-title="Edit"><i class="mdi mdi-pencil font-size-18"></i></a>#}-->
                 <a onClick="
@@ -50,7 +49,6 @@
                     "
                    style="cursor: pointer;" class="text-danger"><i
                         class="mdi mdi-close font-size-18"></i></a>
-            {% endif %}
             </td>
             {% endif %}
 
