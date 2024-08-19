@@ -1,8 +1,8 @@
 import datetime
 import json
 from django.db.models.aggregates import Sum, Count
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import redirect, render
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import *
@@ -454,7 +454,10 @@ class FactoryReturned_div(LoginRequiredMixin, DetailView):
         queryset_payment = Payment.objects.filter(factory=self.object)
         payment_sum = queryset_payment.aggregate(price=Sum('price')).get('price')
         total_account =FactoryInSide.objects.filter(factory=self.object).aggregate(total=Sum('total_account')).get('total')
-        factory_total = total_account - payment_sum
+        if total_account != None:
+            factory_total = total_account - payment_sum
+        else:
+            factory_total = 0 -payment_sum
         factory_total_after_returned = factory_total - returned_sum_total
        
         if returned_sum_total:
@@ -614,7 +617,7 @@ def FactoryOutSideCreate(request):
                     else: 
                         obj.wool_count_item = color_wool_id.count
                         obj.weight = color_wool_id.weight
-                        obj.weight_after_loss = color_wool_id.weight
+                        obj.weight_after_loss = weight_after_loss
                     # print(wool_color_object_id)
                     if  color_wool_id.count >= float(wool_count_item) and color_wool_id.weight >= float(weight):
                         color_wool_id.count -= float(wool_count_item)
@@ -639,15 +642,41 @@ def FactoryOutSideCreate(request):
 def FactoryOutsideDelete(request):
     if request.is_ajax():
         outside_id = request.POST.get('outside_id')
-        obj = FactoryOutSide.objects.get(id=outside_id)
-        obj.delete()
+        if not outside_id:
+            return HttpResponseBadRequest("outside_id not provided")
 
-        if obj:
-            response = {
-                'msg': 'Send Successfully'
-            }
+        obj = get_object_or_404(FactoryOutSide, id=outside_id)
+        print(obj)
+        color_quantity = WoolColor.objects.filter(wool=obj.wool, color=obj.color)
+        print(color_quantity)
+        wool_color_object_id = color_quantity.values_list('id', flat=True)
+        print(wool_color_object_id)
+        if wool_color_object_id:
+            wool_color_object_id_list = list(wool_color_object_id)
+            color_wool_id = WoolColor.objects.get(id=wool_color_object_id_list[0])
+            if color_wool_id:
+                color_wool_id.count += float(obj.wool_count_item)
+                color_wool_id.weight += float(obj.weight)
+                color_wool_id.save()
+                obj.delete()
+                response = {'msg': 1}
+            else:
+                response = {'msg': 0}
+        else:
+            wool_color_object = WoolColor(
+                wool=obj.wool,
+                color=obj.color,
+                count=float(obj.wool_count_item),
+                weight=float(obj.weight)
+            )
+            wool_color_object.save()
+            obj.delete()
+            response = {'msg': 1}
 
         return JsonResponse(response)
+
+    # Handle non-AJAX requests
+    return HttpResponseBadRequest("This view only handles AJAX requests.")
 
 
 def FactoryPaymentCreate(request):
