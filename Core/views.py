@@ -656,7 +656,9 @@ def SystemStatistics(request):
 def ExpensessDetail(request):
 
     form = ExpensessForm()
-    # action_url = reverse_lazy('Wool:AddWoolSupplierQuantity', kwargs={'pk': supplier.id})
+    expensess_type = ExpnsessType.objects.all()
+    object_list = Expnsess.objects.all().order_by('-id')
+    action_url = reverse_lazy('Core:ExpensessCreate')
     system_info = SystemInformation.objects.all()
     if system_info.count() > 0:
         system_info = system_info.last()
@@ -665,9 +667,44 @@ def ExpensessDetail(request):
 
     context = {
         'form': form,
-        # 'action_url': action_url,
+        'action_url': action_url,
         'system_info': system_info,
         'date': datetime.now().date(),
+        'expensess_type': expensess_type,
+        'object_list': object_list
     }
     return render(request, 'Core/expensses_list.html', context)
 
+
+def ExpensessCreate(request):
+    express_type = ExpnsessType.objects.get(id=request.POST.get('expnsess_type'))
+    form = ExpensessForm(request.POST or None)
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.admin = request.user 
+        obj.expnsess_type= express_type
+        obj.save()
+        messages.success(request, " تم اضافة مصروف جديد ", extra_tags="success")
+    else:
+        messages.error(request, " حدث خطأ أثناء اضافة المصروف ", extra_tags="danger")
+    return redirect('Core:ExpensessDetail')
+
+
+class ExpensessDelete(LoginRequiredMixin, UpdateView):
+    login_url = '/auth/login/'
+    model = Expnsess
+    form_class = ExpensessForm
+    template_name = 'forms/form_template.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'حذف البند : '
+        context['message'] = 'super_delete'
+        context['action_url'] = reverse_lazy('Core:ExpensessDelete', kwargs={'pk': self.object.id})
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, " تم حذف البند " + str(self.object) + " نهائيا بنجاح ", extra_tags="success")
+        my_form = Expnsess.objects.get(id=self.kwargs['pk'])
+        my_form.delete()
+        return redirect('Core:ExpensessDetail')

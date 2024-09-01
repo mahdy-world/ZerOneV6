@@ -27,4 +27,6 @@ urlpatterns = [
     path('wool_search/', views.WoolSearch.as_view(), name='WoolSearch'),
     path('system_statistics/', views.SystemStatistics, name='system_statistics'),
     path('ExpensessDetail/', views.ExpensessDetail, name='ExpensessDetail'),
+    path('ExpensessCreate/', views.ExpensessCreate, name='ExpensessCreate'),
+    path('ExpensessDelete/<int:pk>/', views.ExpensessDelete.as_view(), name='ExpensessDelete'),
 ]

@@ -48,7 +48,7 @@ class ExpnsessType(models.Model):
         return self.name
     
 class Expnsess(models.Model):
-    expnsess_date = models.DateField(null=True, verbose_name="التاريخ", default=date.today)
+    expnsess_date = models.DateField(verbose_name="التاريخ", default=date.today)
     expnsess_type = models.ForeignKey(ExpnsessType, on_delete=models.CASCADE, verbose_name="بند المصروف")
     expnsess_amount = models.FloatField(default=0.0, verbose_name="قيمة المصروف")
     expnsess_details = models.CharField(max_length=200, null=True, blank=True, verbose_name="وصف المصروف")
