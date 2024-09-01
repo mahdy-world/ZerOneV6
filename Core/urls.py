@@ -11,6 +11,7 @@ urlpatterns = [
     path('ColorList/', views.ColorList.as_view(), name='ColorList'),
     path('ExpensessTypeList/', views.ExpensessTypeList.as_view(), name='ExpensessTypeList'),
     path('ExpensessTypeCreate/', views.ExpensessTypeCreate.as_view(), name='ExpensessTypeCreate'),
+    path('ExpensessTypeDelete/<int:pk>/', views.ExpensessTypeDelete.as_view(), name='ExpensessTypeDelete'),
     path('systemInfoUpdate/<int:pk>/', views.SystemInfoUpdate.as_view(), name='SystemInfoUpdate'),
     path('factory_search/', views.FactorySearch.as_view(), name='FactorySearch'),
     path('product_search/', views.ProductSearch.as_view(), name='ProductSearch'),
@@ -25,4 +26,5 @@ urlpatterns = [
     path('wool_supplier_search/', views.WoolSupplierSearch.as_view(), name='WoolSupplierSearch'),
     path('wool_search/', views.WoolSearch.as_view(), name='WoolSearch'),
     path('system_statistics/', views.SystemStatistics, name='system_statistics'),
+    path('ExpensessDetail/', views.ExpensessDetail, name='ExpensessDetail'),
 ]

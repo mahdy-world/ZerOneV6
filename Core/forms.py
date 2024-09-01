@@ -23,3 +23,15 @@ class ExpensessTypeCreateForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'id': 'name'}),
         }
+
+class ExpensessForm(forms.ModelForm):
+    class Meta:
+        model = Expnsess
+        fields = '__all__'
+        widgets = {
+            'expnsess_date': forms.DateInput(attrs={'class': 'form-control', 'id': 'expnsess_date', 'type': 'date'}),
+            'expnsess_type': forms.Select(attrs={'class': 'form-control', 'id':'expnsess_type'}),
+            'expnsess_amount': forms.NumberInput(attrs={'class': 'form-control', 'min':'1', 'id':'expnsess_amount'}),
+            'expnsess_details': forms.TextInput(attrs={'class': 'form-control', 'id':'expnsess_details'}),
+            'expnsess_notes': forms.TextInput(attrs={'class': 'form-control', 'id':'expnsess_notes'}),
+        }

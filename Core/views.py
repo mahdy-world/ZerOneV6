@@ -9,7 +9,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import *
 from django.contrib import messages
-from Core.forms import ColorForm, ExpensessTypeCreateForm, SystemInfoForm
+from Core.forms import ColorForm, ExpensessTypeCreateForm, SystemInfoForm, ExpensessForm
 from Core.models import SystemInformation
 from Products.models import *
 from Factories.models import Factory, Supplier
@@ -65,14 +65,33 @@ class ExpensessTypeCreate(LoginRequiredMixin, CreateView):
         return context
     
     def get_success_url(self):
-        messages.success(self.request, "تم إضافة بيانات للنظام بنجاح", extra_tags="success")
+        messages.success(self.request, "تم إضافة بند جديد  ", extra_tags="success")
 
         if self.request.POST.get('url'):
             return self.request.POST.get('url')
         else:
             return self.success_url
-            
-    
+
+
+class ExpensessTypeDelete(LoginRequiredMixin, UpdateView):
+    login_url = '/auth/login/'
+    model = ExpnsessType
+    form_class = ExpensessTypeCreateForm
+    template_name = 'forms/form_template.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'حذف البند : ' + str(self.object.name)
+        context['message'] = 'super_delete'
+        context['action_url'] = reverse_lazy('Core:ExpensessTypeDelete', kwargs={'pk': self.object.id})
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, " تم حذف البند " + str(self.object) + " نهائيا بنجاح ", extra_tags="success")
+        my_form = ExpnsessType.objects.get(id=self.kwargs['pk'])
+        my_form.delete()
+        return redirect('Core:ExpensessTypeList')
+
 
 class ColorList(LoginRequiredMixin, ListView):
     login_url = '/auth/login/'
@@ -142,8 +161,7 @@ class ColorDelete(LoginRequiredMixin, UpdateView):
     model = Color
     form_class = ColorForm
     template_name = 'forms/form_template.html'
-    
- 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'حذف اللون : ' + str(self.object.color_name)
@@ -633,4 +651,23 @@ def SystemStatistics(request):
         'inv3_dict': inv3_dict,
         'treasuries_dict': treasuries_dict,
     })
+
+
+def ExpensessDetail(request):
+
+    form = ExpensessForm()
+    # action_url = reverse_lazy('Wool:AddWoolSupplierQuantity', kwargs={'pk': supplier.id})
+    system_info = SystemInformation.objects.all()
+    if system_info.count() > 0:
+        system_info = system_info.last()
+    else:
+        system_info = None
+
+    context = {
+        'form': form,
+        # 'action_url': action_url,
+        'system_info': system_info,
+        'date': datetime.now().date(),
+    }
+    return render(request, 'Core/expensses_list.html', context)
 
