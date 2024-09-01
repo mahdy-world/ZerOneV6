@@ -9,7 +9,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import *
 from django.contrib import messages
-from Core.forms import ColorForm, SystemInfoForm
+from Core.forms import ColorForm, ExpensessTypeCreateForm, SystemInfoForm
 from Core.models import SystemInformation
 from Products.models import *
 from Factories.models import Factory, Supplier
@@ -30,6 +30,49 @@ def Index(request):
     modules = Modules.objects.all().last()
     today = datetime.now().date()
     return render(request, 'core/index.html', {'modules':modules, 'today': today})
+
+class ExpensessTypeList(LoginRequiredMixin, ListView):
+    login_url = '/auth/login/'
+    model = ExpnsessType
+    paginate_by = 12
+    template_name = 'Core/expensses_type_list.html'
+    
+    def get_queryset(self):
+        qureyset = self.model.objects.all().order_by('-id')
+        return qureyset
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['type'] = 'list'
+        context['title'] = 'قائمة البنود'
+        context['icons'] = '<i class="fas fa-shapes"></i>'
+        context['page'] = 'active'
+        context['count'] = self.model.objects.all().count()
+        return context
+    
+class ExpensessTypeCreate(LoginRequiredMixin, CreateView):
+    login_url = ' /auth/login/'
+    model = ExpnsessType
+    template_name = 'forms/form_template.html'
+    form_class = ExpensessTypeCreateForm
+    success_url = reverse_lazy('Core:ExpensessTypeList')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'اضافة نوع جديد'
+        context['message'] = 'info'
+        context['action_url'] = reverse_lazy('Core:ExpensessTypeCreate')
+        return context
+    
+    def get_success_url(self):
+        messages.success(self.request, "تم إضافة بيانات للنظام بنجاح", extra_tags="success")
+
+        if self.request.POST.get('url'):
+            return self.request.POST.get('url')
+        else:
+            return self.success_url
+            
+    
 
 class ColorList(LoginRequiredMixin, ListView):
     login_url = '/auth/login/'

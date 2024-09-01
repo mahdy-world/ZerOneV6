@@ -454,10 +454,10 @@ class FactoryReturned_div(LoginRequiredMixin, DetailView):
         queryset_payment = Payment.objects.filter(factory=self.object)
         payment_sum = queryset_payment.aggregate(price=Sum('price')).get('price')
         total_account =FactoryInSide.objects.filter(factory=self.object).aggregate(total=Sum('total_account')).get('total')
-        if total_account != None:
+        if total_account is not None:
             factory_total = total_account - payment_sum
         else:
-            factory_total = 0 -payment_sum
+            factory_total = 0 - payment_sum
         factory_total_after_returned = factory_total - returned_sum_total
        
         if returned_sum_total:
