@@ -15,6 +15,7 @@ urlpatterns = [
     path('systemInfoUpdate/<int:pk>/', views.SystemInfoUpdate.as_view(), name='SystemInfoUpdate'),
     path('factory_search/', views.FactorySearch.as_view(), name='FactorySearch'),
     path('product_search/', views.ProductSearch.as_view(), name='ProductSearch'),
+    path('ProductSearch_size/', views.ProductSearch_size.as_view(), name='ProductSearch_size'),
     path('seller_search/', views.SellerSearch.as_view(), name='SellerSearch'),
     path('worker_search/', views.WorkerSearch.as_view(), name='WorkerSearch'),
     path('invoice_search/', views.InvoiceSearch.as_view(), name='InvoiceSearch'),

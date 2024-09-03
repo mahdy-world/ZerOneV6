@@ -304,6 +304,25 @@ class ProductSearch(LoginRequiredMixin, ListView):
         product_serach = self.request.GET.get("product")  
         queryset = self.model.objects.filter(name__icontains=product_serach, deleted=False)
         return queryset
+    
+class ProductSearch_size(LoginRequiredMixin, ListView):
+    login_url = '/auth/login/'
+    model = Product
+    template_name = 'Products/product_list.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['message'] = 'active'
+        context['page'] = 'active'
+        context['product_serach_size'] = self.request.GET.get("product_size")
+        context['type'] = 'list'
+        context['count'] = self.model.objects.filter(deleted=False).count()
+        return context
+    
+    def get_queryset(self):
+        product_serach = self.request.GET.get("product_size")  
+        queryset = self.model.objects.filter(size=int(product_serach), deleted=False)
+        return queryset
 
 
 class InvoiceSearch(LoginRequiredMixin, ListView):

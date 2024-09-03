@@ -1441,8 +1441,6 @@ def ProductQuantityInsideCreate(request, pk):
         obj.product_color = form.cleaned_data.get("product_color")
         obj.created_user = request.user
         obj.save()
-        product.quantity = form.cleaned_data.get("product_count")
-        product.save()
         messages.success(request, " تم اضافة كمية جديدة بنجاح ", extra_tags="success")
     else:
         messages.error(request, " حدث خطأ أثناء اضافة الكمية ", extra_tags="danger")
