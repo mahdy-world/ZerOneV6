@@ -35,6 +35,7 @@
               <td><i class="fas fa-user-tie"></i> {{x.admin}}</td>
               {% if request.user.is_superuser %}
               <td>
+
               <!--
 {#              <a#}
 {#                  href="{% url 'Workers:WorkerPaymentUpdate' x.id %}"#}
@@ -55,6 +56,7 @@
                   class="text-danger"
                   ><i class="mdi mdi-close font-size-18"></i
               ></a>
+
               </td>
               {% endif %}
               

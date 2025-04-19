@@ -87,7 +87,7 @@ class ExpensessTypeDelete(LoginRequiredMixin, UpdateView):
         return context
 
     def form_valid(self, form):
-        messages.success(self.request, " تم حذف البند " + str(self.object) + " نهائيا بنجاح ", extra_tags="success")
+        messages.success(self.request, " تم حذف البند " +  " نهائيا بنجاح ", extra_tags="success")
         my_form = ExpnsessType.objects.get(id=self.kwargs['pk'])
         my_form.delete()
         return redirect('Core:ExpensessTypeList')
@@ -723,7 +723,11 @@ class ExpensessDelete(LoginRequiredMixin, UpdateView):
         return context
 
     def form_valid(self, form):
+<<<<<<< HEAD
         messages.success(self.request, " تم حذف البند " + str(self.object) + " نهائيا بنجاح ", extra_tags="success")
+=======
+        messages.success(self.request, " تم حذف البند " +  " نهائيا بنجاح ", extra_tags="success")
+>>>>>>> 79f464a (last_update_19_04_2025)
         my_form = Expnsess.objects.get(id=self.kwargs['pk'])
         my_form.delete()
         return redirect('Core:ExpensessDetail')

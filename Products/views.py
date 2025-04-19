@@ -283,6 +283,9 @@ class ProductDetails(LoginRequiredMixin, ListView):
             product_quantity = product.quantity
         else:
             product_quantity = 0
+        
+        context['total'] =  context['factory_in_sum'] + product_quantity - (context['invoices_sum'] - context['r_invoices_sum']) - (context['importer_sum'] - context['supplier_sum'])
+
             
         system_info = SystemInformation.objects.all()
         if system_info.count() > 0:
@@ -293,9 +296,6 @@ class ProductDetails(LoginRequiredMixin, ListView):
         context['system_info'] = system_info
         context['date'] = datetime.now()
         context['user'] = self.request.user
-        
-        context['total'] =  context['factory_in_sum'] + product_quantity - (context['invoices_sum'] - context['r_invoices_sum']) - (context['importer_sum'] - context['supplier_sum'])
-
         context['product'] = product
         return context
 
